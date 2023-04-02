@@ -1,0 +1,15 @@
+{
+  "name": "reactCurrencyConverter",
+  "displayName": "reactCurrencyConverter",
+  "extra": {
+    "eas": {
+      "projectId": "8f071f20-9e14-41a8-b6b1-e720337ffdbc"
+    },
+
+  },
+  "expo": {
+    "userInterfaceStyle": "automatic"
+  },
+
+  "owner": "danio189"
+}
