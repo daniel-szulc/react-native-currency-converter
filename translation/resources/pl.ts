@@ -1,5 +1,1 @@
-export default {
-  welcome: "Witaj",
-  currencyConverter: "Przelicznik walut",
-  settings: "Ustawienia"
-};
+export default {"welcome":"Witaj","currencyConverter":"Konwerter walut","settings":"Ustawienia","Convert":"Przelicz","Last update":"Zaktualizowano"}

@@ -1,5 +1,1 @@
-export default {
-  welcome: "Welcome",
-  currencyConverter: "Currency Converter",
-  settings: "Settings"
-};
+export default {"welcome":"Welcome","currencyConverter":"Currency Converter","settings":"Settings","Convert":"Convert","Last update":"Last update"}

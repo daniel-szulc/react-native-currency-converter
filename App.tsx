@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React from "react";
 
 import type {PropsWithChildren} from 'react';
 
@@ -19,7 +19,7 @@ import Navigation from "./components/Navigation";
 
 const App = () => {
 
-  i18n.changeLanguage("pl")
+ //i18n.changeLanguage("pl")
 
   return (
     <ThemeProvider>

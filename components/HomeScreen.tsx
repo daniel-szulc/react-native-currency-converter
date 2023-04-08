@@ -1,4 +1,11 @@
-import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import CurrencyElement from "./CurrencyElement";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useContext, useState } from "react";
@@ -6,16 +13,25 @@ import { Colors } from "../theme";
 import { ThemeContext, ThemeType } from "./ThemeContext";
 import i18n from "i18next";
 import { IconButton } from "@react-native-material/core";
+import { Currency } from "./Currency";
+import { Data, getData } from "./Data";
+import InputValueModal from "./InputValueModal";
+
+export function formatLastUpdate(lastUpdate: string | undefined): string {
+  if(!lastUpdate)
+    return "";
+  const date = new Date(lastUpdate);
+  return i18n.t("Last update") + ": " + date.toLocaleString() ;
+}
 
 function HomeScreen({navigation})  {
 
-  const clickHandler = () => {
-    //function to handle click on floating Action Button
-    alert('Click')
-    console.log("THEME: " + theme)
-  };
+
 
   const { theme, toggleTheme } = useContext(ThemeContext);
+
+  const [data, setData] = useState<Data>();
+
 
 
   React.useEffect(() => {
@@ -48,7 +64,37 @@ function HomeScreen({navigation})  {
           />
         </View>
       )}));
+
+
+
   }, [navigation, theme]);
+
+
+  const fetchData = async () => {
+    try {
+      const data = await getData();
+      setData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const convertValue = (value: number) => {
+
+
+    if(selectedCurrency) {
+      data?.selectedCurrencies.forEach(currency => {
+
+        const rateBase = currency.rate / selectedCurrency?.rate;
+        const result = value * rateBase;
+        currency.convertedResult = result;
+      })
+    }
+  }
+
+
+
+  fetchData();
 
   const styles = StyleSheet.create({
     container: {
@@ -90,19 +136,38 @@ function HomeScreen({navigation})  {
       justifyContent: 'space-evenly',
       width: 120,
     },
+
+
+
   });
+
+  function selectCurrency(selectedCurrency : Currency) {
+    if(!selectedCurrency)
+      return
+    setSelectedCurrency(selectedCurrency)
+    setModalVisible(true);
+  }
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>();
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <InputValueModal selectedCurrency={selectedCurrency} modalVisible={modalVisible} setModalVisible={setModalVisible} convertValue={convertValue} />
+
       <View style={styles.container}>
-        <ScrollView>
-          <CurrencyElement flag={"https://via.placeholder.com/50"} name={"EUR - Euro"} currencyValue={"1,00 €" }/>
-          <CurrencyElement flag={"https://via.placeholder.com/50"} name={"USD - Dollar"} currencyValue={"1,00 $" }/>
-          <CurrencyElement flag={"https://via.placeholder.com/50"} name={"PLN - Zloty"} currencyValue={"1,00 zł" }/>
+        <ScrollView style={{marginVertical: 5}}>
+          {
+            data?.selectedCurrencies.map((currency) =>
+              <CurrencyElement onPress={selectCurrency}  currency={currency}/>
+            )
+          }
+          <Text style={{alignSelf: "flex-end", margin: 5, marginHorizontal: 10, color: Colors[theme]?.darkWhite}}>{formatLastUpdate(data?.lastUpdate)}</Text>
         </ScrollView>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={clickHandler}
+          onPress={() => setModalVisible(true)}
           style={styles.touchableOpacityStyle}>
           <MaterialCommunityIcons name="web-plus" size={30} color="white" />
         </TouchableOpacity>

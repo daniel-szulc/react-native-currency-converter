@@ -71,7 +71,6 @@ function Settings({navigation}) {
       resizeMode: 'contain',
       width: 50,
       height: 50,
-      //backgroundColor:'black'
     },
     iconContainer: {
       flexDirection: 'row',
