@@ -4,14 +4,11 @@ import { ThemeContext } from './ThemeContext';
 import HomeScreen from "./HomeScreen";
 import Settings from "./Settings";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import CurrencySelector from "./CurrencySelector";
 const Stack = createNativeStackNavigator();
 export default function Navigation() {
   const { theme } = useContext(ThemeContext);
-  const forFade = ({ current }) => ({
-    cardStyle: {
-      opacity: current.progress,
-    },
-  });
+
   return (
     <NavigationContainer theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
@@ -21,10 +18,16 @@ export default function Navigation() {
           options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen
+          name="Selector"
+          component={CurrencySelector}
+          options={{ animation: 'slide_from_left' }}
+        />
+        <Stack.Screen
           name="Settings"
           component={Settings}
           options={{ animation: 'slide_from_right' }}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

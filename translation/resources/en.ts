@@ -1,1 +1,1 @@
-export default {"welcome":"Welcome","currencyConverter":"Currency Converter","settings":"Settings","Convert":"Convert","Last update":"Last update"}
+export default {"welcome":"Welcome","currencyConverter":"Currency Converter","settings":"Settings","Convert":"Convert","Last update":"Last update","Cryptocurrency":"Cryptocurrency","Traditional currency":"Traditional currency","Add currency":"Add currency","Search currency":"Search currency"}

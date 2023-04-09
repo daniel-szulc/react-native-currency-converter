@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 
 import type {PropsWithChildren} from 'react';
 
@@ -16,14 +16,16 @@ import {ThemeProvider} from "./components/ThemeContext";
 import i18n from "i18next";
 
 import Navigation from "./components/Navigation";
+import { Data } from "./components/Data";
 
 const App = () => {
 
- //i18n.changeLanguage("pl")
+ i18n.changeLanguage("pl")
+
 
   return (
     <ThemeProvider>
-      <Navigation/>
+      <Navigation />
     </ThemeProvider>
   );
 };

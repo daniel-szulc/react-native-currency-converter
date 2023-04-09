@@ -1,4 +1,5 @@
 import {
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,8 +15,10 @@ import { ThemeContext, ThemeType } from "./ThemeContext";
 import i18n from "i18next";
 import { IconButton } from "@react-native-material/core";
 import { Currency } from "./Currency";
-import { Data, getData } from "./Data";
+import { Data, getLocalData, updateData } from "./Data";
 import InputValueModal from "./InputValueModal";
+
+
 
 export function formatLastUpdate(lastUpdate: string | undefined): string {
   if(!lastUpdate)
@@ -33,6 +36,10 @@ function HomeScreen({navigation})  {
   const [data, setData] = useState<Data>();
 
 
+
+
+  const [providedAmount, setProvidedAmount] = useState(1);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   React.useEffect(() => {
     navigation.setOptions(({
@@ -65,19 +72,41 @@ function HomeScreen({navigation})  {
         </View>
       )}));
 
-
+    fetchData();
 
   }, [navigation, theme]);
 
 
+  React.useEffect(() => {
+
+    convertValue(providedAmount);
+
+  }, [data]);
+
+  const onRefresh = React.useCallback(() => {
+  setRefreshing(true);
+    fetchData();
+  }, []);
+
   const fetchData = async () => {
+
     try {
-      const data = await getData();
-      setData(data);
+      if(!data)
+      {
+        const localData = await getLocalData();
+        setData(localData);
+      }
+
+      const newData = await updateData(data?.selectedCurrencies);
+      setData(newData);
+      setRefreshing(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+
+
 
   const convertValue = (value: number) => {
 
@@ -88,13 +117,16 @@ function HomeScreen({navigation})  {
         const rateBase = currency.rate / selectedCurrency?.rate;
         const result = value * rateBase;
         currency.convertedResult = result;
+        setProvidedAmount(value);
       })
     }
   }
 
 
 
-  fetchData();
+
+
+
 
   const styles = StyleSheet.create({
     container: {
@@ -151,23 +183,29 @@ function HomeScreen({navigation})  {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>();
 
+
+
+
   return (
     <SafeAreaView style={styles.container}>
 
       <InputValueModal selectedCurrency={selectedCurrency} modalVisible={modalVisible} setModalVisible={setModalVisible} convertValue={convertValue} />
 
       <View style={styles.container}>
-        <ScrollView style={{marginVertical: 5}}>
+        <ScrollView style={{paddingVertical: 5}}
+                    refreshControl={
+                      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
           {
             data?.selectedCurrencies.map((currency) =>
-              <CurrencyElement onPress={selectCurrency}  currency={currency}/>
+              <CurrencyElement onPress={selectCurrency}  currency={currency} />
             )
           }
           <Text style={{alignSelf: "flex-end", margin: 5, marginHorizontal: 10, color: Colors[theme]?.darkWhite}}>{formatLastUpdate(data?.lastUpdate)}</Text>
         </ScrollView>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => setModalVisible(true)}
+          onPress={() => navigation.navigate('Selector', {data: data, setData: setData})}
           style={styles.touchableOpacityStyle}>
           <MaterialCommunityIcons name="web-plus" size={30} color="white" />
         </TouchableOpacity>

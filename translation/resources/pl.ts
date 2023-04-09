@@ -1,1 +1,1 @@
-export default {"welcome":"Witaj","currencyConverter":"Konwerter walut","settings":"Ustawienia","Convert":"Przelicz","Last update":"Zaktualizowano"}
+export default {"welcome":"Witaj","currencyConverter":"Konwerter walut","settings":"Ustawienia","Convert":"Przelicz","Last update":"Zaktualizowano","Cryptocurrency":"Kryptowaluty","Traditional currency":"Tradycyjna waluta","Add currency":"Dodaj walutę","Search currency":"Znajdź walutę"}
