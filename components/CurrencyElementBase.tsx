@@ -13,14 +13,26 @@ import CurrencyElement from "./CurrencyElement";
 
 class CurrencyElementBase extends React.PureComponent {
 
-
 state = {
       imageExists: true,
       imageSource: { uri: "https://wise.com/public-resources/assets/flags/rectangle/" + this.props.currency.name.toLowerCase() + ".png" },
       loading: true,
+      theme: 'light'
     }
 
+  static contextType = ThemeContext;
+
+
   componentDidMount(){
+
+    const {theme} = this.context;
+
+    this.setState(
+      {
+        theme: theme
+      }
+    )
+
     this.fetchImage();
   }
 
@@ -53,76 +65,80 @@ state = {
      }
   };
 
-   styles = StyleSheet.create({
-    container: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: Colors[this.props.theme]?.lightThemeColor,
-      marginHorizontal: 10,
-      marginTop: 5,
-      marginBottom: 5,
-      padding: 10,
-      paddingVertical: 8,
-      borderRadius: 10,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 1,
-        height: 1
+  get styles() {
+    const { theme } = this.context;
+
+    return StyleSheet.create({
+      container: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: Colors[theme]?.lightThemeColor,
+        marginHorizontal: 10,
+        marginTop: 5,
+        marginBottom: 5,
+        padding: 10,
+        paddingVertical: 8,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 1,
+          height: 1
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3
+
       },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-      elevation: 3
+      currencyName: {
 
-    },
-    currencyName: {
-
-      color: Colors[this.props.theme]?.darkWhite
-    },
-    currencyFullName: {
-      color: Colors[this.props.theme]?.white,
-      fontWeight: "bold"
-    },
-    currencyNameView: {
-      flex: 1,
-      paddingHorizontal: 10,
-      marginVertical: -1,
-      textAlign: "left"
-    },
-    currencyValue: {
-      color: Colors[this.props.theme]?.primaryText,
-      fontSize: 16
-    },
-    flag: {
-      width: this.props.currency.type === CurrencyType.Crypto ? 36 : 42,
-      height: this.props.currency.type === CurrencyType.Crypto ? 36 : 28,
-      borderRadius: 5,
-      justifyContent: "center",
-      alignItems: "center",
-      marginHorizontal: this.props.currency.type === CurrencyType.Crypto ? 3 : 0,
-      borderColor: Colors[this.props.theme]?.darkWhite,
-      borderWidth: this.state.imageExists ? undefined : 0.5
-    },
-    flagText: {
-      alignSelf: "center",
-      fontWeight: "bold",
-      textAlign: "center",
-      textAlignVertical: "center",
-      color: Colors[this.props.theme]?.white
-    },
-    flagView: {
-      margin: 2,
-      borderRadius: 5,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1
+        color: Colors[theme]?.darkWhite
       },
-      shadowOpacity: 0.18,
-      shadowRadius: 1.00,
-      elevation: 1
-    }
+      currencyFullName: {
+        color: Colors[theme]?.white,
+        fontWeight: "bold"
+      },
+      currencyNameView: {
+        flex: 1,
+        paddingHorizontal: 10,
+        marginVertical: -1,
+        textAlign: "left"
+      },
+      currencyValue: {
+        color: Colors[theme]?.primaryText,
+        fontSize: 16
+      },
+      flag: {
+        width: this.props.currency.type === CurrencyType.Crypto ? 36 : 42,
+        height: this.props.currency.type === CurrencyType.Crypto ? 36 : 28,
+        borderRadius: 5,
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: this.props.currency.type === CurrencyType.Crypto ? 3 : 0,
+        borderColor: Colors[theme]?.darkWhite,
+        borderWidth: this.state.imageExists ? undefined : 0.5
+      },
+      flagText: {
+        alignSelf: "center",
+        fontWeight: "bold",
+        textAlign: "center",
+        textAlignVertical: "center",
+        color: Colors[theme]?.white
+      },
+      flagView: {
+        margin: 2,
+        borderRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1
+        },
+        shadowOpacity: 0.18,
+        shadowRadius: 1.00,
+        elevation: 1
+      }
 
-  });
+    });
+  }
 
    baseCurrencyView(){
      return (

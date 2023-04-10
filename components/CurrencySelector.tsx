@@ -237,7 +237,7 @@ const CurrencySelector = ({route, navigation}) =>{
         activeOpacity={0.7}
         onPress={() => {
         //  navigation.setParams({selectedCurrenciesTest: selectedCurrencyRef.current})
-          navigation.navigate("Home", {selectedCurrenciesTest: selectedCurrencyRef.current});
+          navigation.goBack()
         }}
         style={styles.touchableOpacityStyle}>
         <FontAwesome name="check" size={25} color="white" />

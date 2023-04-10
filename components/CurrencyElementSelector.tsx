@@ -3,6 +3,7 @@ import {  Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CurrencyElementBase, { Props as BaseProps } from "./CurrencyElementBase";
 import Checkbox from 'expo-checkbox';
 import { Colors } from "../theme";
+import { ThemeContext } from "./ThemeContext";
 
 
 class CurrencyElementSelector extends CurrencyElementBase {
@@ -30,7 +31,7 @@ class CurrencyElementSelector extends CurrencyElementBase {
 /*  componentDidUpdate(prevProps) {
 
   }*/
-
+  static context = ThemeContext;
 
   styles = StyleSheet.create(
     Object.assign({},
@@ -57,7 +58,7 @@ class CurrencyElementSelector extends CurrencyElementBase {
               value={this.state.isSelected}
               onValueChange={() =>  this.selectCurrency()}
               style={this.styles.checkbox}
-              color={this.state.isSelected ? Colors[this.props.theme].primary : undefined}
+              color={this.state.isSelected ? Colors[this.context.theme].primary : undefined}
             />
           </TouchableOpacity>) : null
 

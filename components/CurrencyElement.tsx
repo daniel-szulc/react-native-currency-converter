@@ -14,17 +14,22 @@ class CurrencyElement extends CurrencyElementBase {
 
   }
 
+  static context = ThemeContext;
 
-  styles = StyleSheet.create(
-    Object.assign({},
-      this.styles,
-      {
-        currencyValue: {
-          color: Colors[this.props.theme]?.primaryText,
+  get styles() {
+    const { theme } = this.context;
 
-          fontSize: 16
-        }
-      }));
+    return StyleSheet.create(
+      Object.assign({},
+        super.styles,
+        {
+          currencyValue: {
+            color: Colors[this.context.theme]?.primaryText,
+
+            fontSize: 16
+          }
+        }));
+    }
 
   render() {
    super.render();
@@ -34,7 +39,7 @@ class CurrencyElement extends CurrencyElementBase {
 
     return (
       (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
-        (<TouchableOpacity onPress={this.props.onPress} style={this.styles.container}>
+        (<TouchableOpacity onPress={() => this.props.onPress(this.props.currency)} style={this.styles.container}>
           {this.baseCurrencyView()}
             <Text style={this.styles.currencyValue}>{this.props.currency.symbol + Math.round(this.props.currency.convertedResult * roundDecimalValue) / roundDecimalValue}</Text>
         </TouchableOpacity>) : null

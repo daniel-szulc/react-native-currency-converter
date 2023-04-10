@@ -12,7 +12,8 @@ export interface Data {
   selectedCurrencies: Currency[];
   theme: string;
   lastUpdate: string;
-
+  providedAmount: number;
+  selectedCurrency: Currency | undefined;
 }
 
 
@@ -23,7 +24,8 @@ export const defaultData: Data = {
   selectedCurrencies: [],
   theme: "light",
   lastUpdate: "",
-
+  providedAmount: 1,
+  selectedCurrency: undefined
 };
 
 const STORAGE_KEY = "@data";
@@ -65,7 +67,6 @@ export async function updateData(currentData: Data | undefined): Promise<Data> {
 
   if(data.selectedCurrencies)
   {
-    console.log("SELECTED CURRECNIES: " + data.selectedCurrencies.length)
     if(data.selectedCurrencies.length>0) {
       data.selectedCurrencies = [...data.currency, ...data.crypto].filter((currency) => {
         return data.selectedCurrencies.some((selectedCurrency) => selectedCurrency.name === currency.name);
@@ -79,11 +80,19 @@ export async function updateData(currentData: Data | undefined): Promise<Data> {
     data.selectedCurrencies = defaultSelectedCurrency(data);
   }
 
+  if(data.selectedCurrency == undefined)
+    data.selectedCurrency =  data.selectedCurrencies[0];
+
   await setData(data);
 
   return data;
 }
 
+
+export async function getSelectedCurrencies(): Promise<Currency[]> {
+  const data = await getLocalData();
+  return data.selectedCurrencies;
+}
 
 export async function getLocalData(): Promise<Data> {
   let data = defaultData;
