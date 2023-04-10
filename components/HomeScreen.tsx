@@ -79,6 +79,8 @@ function HomeScreen({navigation})  {
 
   React.useEffect(() => {
 
+
+
     convertValue(providedAmount);
 
   }, [data]);
@@ -173,6 +175,13 @@ function HomeScreen({navigation})  {
 
   });
 
+  function setSelectedCurrencies(selectedCurrencies : Currency[]) {
+
+    setData((prevData) => {
+      return ({ ...prevData, selectedCurrencies: selectedCurrencies });
+    });
+  }
+
   function selectCurrency(selectedCurrency : Currency) {
     if(!selectedCurrency)
       return
@@ -198,14 +207,14 @@ function HomeScreen({navigation})  {
         >
           {
             data?.selectedCurrencies.map((currency) =>
-              <CurrencyElement onPress={selectCurrency}  currency={currency} />
+              <CurrencyElement onPress={selectCurrency}  currency={currency} theme={theme}/>
             )
           }
           <Text style={{alignSelf: "flex-end", margin: 5, marginHorizontal: 10, color: Colors[theme]?.darkWhite}}>{formatLastUpdate(data?.lastUpdate)}</Text>
         </ScrollView>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => navigation.navigate('Selector', {data: data, setData: setData})}
+          onPress={() => navigation.navigate('Selector', {data: data, setSelectedCurrencies: setSelectedCurrencies})}
           style={styles.touchableOpacityStyle}>
           <MaterialCommunityIcons name="web-plus" size={30} color="white" />
         </TouchableOpacity>

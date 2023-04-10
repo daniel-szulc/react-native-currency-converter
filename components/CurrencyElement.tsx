@@ -7,40 +7,43 @@ import { Currency, CurrencyType } from "./Currency";
 import CurrencyElementBase from "./CurrencyElementBase";
 
 
-interface Props {
-  currency: Currency;
-  onPress: (param: Currency) => void;
+class CurrencyElement extends CurrencyElementBase {
+
+  state = {
+    ...this.state,
+
+  }
+
+
+  styles = StyleSheet.create(
+    Object.assign({},
+      this.styles,
+      {
+        currencyValue: {
+          color: Colors[this.props.theme]?.primaryText,
+
+          fontSize: 16
+        }
+      }));
+
+  render() {
+   super.render();
+
+    const roundDecimalValue = this.props.currency.type === CurrencyType.Crypto ? 10000 : 100;
+
+
+    return (
+      (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
+        (<TouchableOpacity onPress={this.props.onPress} style={this.styles.container}>
+          {this.baseCurrencyView()}
+            <Text style={this.styles.currencyValue}>{this.props.currency.symbol + Math.round(this.props.currency.convertedResult * roundDecimalValue) / roundDecimalValue}</Text>
+        </TouchableOpacity>) : null
+
+    );
+
+
+  }
 }
-
-const CurrencyElement: React.FC<Props> = ({ currency, onPress }) => {
-
-  const { theme } = useContext<ThemeType>(ThemeContext);
-
-  const styles = StyleSheet.create({
-
-    currencyValue:{
-      color: Colors[theme]?.primaryText,
-
-      fontSize: 16
-    },
-
-
-
-
-  });
-
-      const roundDecimalValue = currency.type===CurrencyType.Crypto ? 10000 : 100;
-
-
-  return (
-    <CurrencyElementBase currency={currency} onPress={onPress}>
-      <Text style={styles.currencyValue}>{currency.symbol + Math.round(currency.convertedResult * roundDecimalValue) / roundDecimalValue}</Text>
-    </CurrencyElementBase>
-
-  );
-
-
-};
 
 export default CurrencyElement;
 

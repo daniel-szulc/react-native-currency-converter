@@ -6,137 +6,158 @@ import { useTheme } from "@react-navigation/native";
 import { Currency, CurrencyType } from "./Currency";
 import CurrencyElement from "./CurrencyElement";
 
-interface Props {
+/*interface Props {
   currency: Currency;
   onPress: (param: Currency) => void;
-}
+}*/
 
-const CurrencyElementBase: React.FC<Props> = ({ currency, onPress, children  }) => {
+class CurrencyElementBase extends React.PureComponent {
 
-  const [imageExists, setImageExists] = useState(true);
-  const { theme } = useContext<ThemeType>(ThemeContext);
 
-  const styles = StyleSheet.create({
+state = {
+      imageExists: true,
+      imageSource: { uri: "https://wise.com/public-resources/assets/flags/rectangle/" + this.props.currency.name.toLowerCase() + ".png" },
+      loading: true,
+    }
+
+  componentDidMount(){
+    this.fetchImage();
+  }
+
+  componentDidUpdate(prevProps) {
+
+    if (prevProps.currency !== this.props.currency) {
+
+      this.setState(
+        {
+          imageSource: { uri: "https://wise.com/public-resources/assets/flags/rectangle/" + this.props.currency.name.toLowerCase() + ".png" }
+        }
+      )
+      this.fetchImage();
+    }
+  }
+
+   fetchImage = async () => {
+     const { currency } = this.props;
+
+     try {
+       const response = await fetch(currency.imageUrl || this.state.imageSource.uri);
+       if (response.status === 200) {
+         this.setState({ imageSource: { uri: currency.imageUrl || this.state.imageSource.uri }, loading: false, imageExists: true });
+       } else {
+         this.setState({ loading: false, imageExists: false });
+       }
+     } catch (error) {
+       console.log('Error loading image:', error);
+       this.setState({ loading: false, imageExists: false });
+     }
+  };
+
+   styles = StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: Colors[theme]?.lightThemeColor,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: Colors[this.props.theme]?.lightThemeColor,
       marginHorizontal: 10,
       marginTop: 5,
-      marginBottom:5,
+      marginBottom: 5,
       padding: 10,
       paddingVertical: 8,
-      borderRadius:10,
+      borderRadius: 10,
       shadowColor: "#000",
       shadowOffset: {
-        width:1,
+        width: 1,
         height: 1
       },
       shadowOpacity: 0.22,
       shadowRadius: 2.22,
-      elevation: 3,
+      elevation: 3
 
     },
     currencyName: {
 
-      color: Colors[theme]?.darkWhite,
+      color: Colors[this.props.theme]?.darkWhite
     },
     currencyFullName: {
-      color: Colors[theme]?.white,
-      fontWeight: 'bold',
+      color: Colors[this.props.theme]?.white,
+      fontWeight: "bold"
     },
     currencyNameView: {
       flex: 1,
       paddingHorizontal: 10,
       marginVertical: -1,
-      textAlign: 'left',
+      textAlign: "left"
     },
-    currencyValue:{
-      color: Colors[theme]?.primaryText,
+    currencyValue: {
+      color: Colors[this.props.theme]?.primaryText,
       fontSize: 16
     },
-    flag:{
-      width: currency.type===CurrencyType.Crypto ? 36 : 42,
-      height: currency.type===CurrencyType.Crypto ? 36 : 28,
+    flag: {
+      width: this.props.currency.type === CurrencyType.Crypto ? 36 : 42,
+      height: this.props.currency.type === CurrencyType.Crypto ? 36 : 28,
       borderRadius: 5,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginHorizontal:  currency.type===CurrencyType.Crypto ? 3 : 0,
-      borderColor: Colors[theme]?.darkWhite,
-      borderWidth:  imageExists ? undefined : 0.5,
+      justifyContent: "center",
+      alignItems: "center",
+      marginHorizontal: this.props.currency.type === CurrencyType.Crypto ? 3 : 0,
+      borderColor: Colors[this.props.theme]?.darkWhite,
+      borderWidth: this.state.imageExists ? undefined : 0.5
     },
-    flagText:{
+    flagText: {
       alignSelf: "center",
       fontWeight: "bold",
       textAlign: "center",
       textAlignVertical: "center",
-      color: Colors[theme]?.white,
+      color: Colors[this.props.theme]?.white
     },
-    flagView:{
+    flagView: {
       margin: 2,
       borderRadius: 5,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
-        height: 1,
+        height: 1
       },
       shadowOpacity: 0.18,
       shadowRadius: 1.00,
-      elevation: 1,
+      elevation: 1
     }
 
   });
 
-    let flag = "https://wise.com/public-resources/assets/flags/rectangle/"+ currency.name.toLowerCase() +".png"
-
-    if(currency.imageUrl)
-      flag = currency.imageUrl;
-
-    const [imageSource, setImageSource] = useState({uri: flag});
-    const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-  const fetchImage = async () => {
-
-
-        try {
-          const response = await fetch(flag);
-          if (response.status === 200) {
-
-            setImageSource({uri: flag});
-            setLoading(false);
-            setImageExists(true);
-          } else {
-           // console.log('Image not found');
-            setLoading(false);
-            setImageExists(false);
-          }
-
-        } catch (error) {
-          console.log('Error loading image:', error);
-          setLoading(false);
-          setImageExists(false);
-        }
-    };
-
-  fetchImage();
-  }, [currency]);
-
-  return (
-    (currency.full_name!=="" && currency.name!=="" && currency.convertedResult!==undefined ) ?
-      (<TouchableOpacity onPress={() => onPress(currency)} style={styles.container}>
-        {imageExists ? (<Image source={imageSource} style={styles.flag}/>) : (<View style={styles.flag}><Text style={styles.flagText}>{currency.symbol==="" ? "?" : currency.symbol}</Text></View>)}
-       <View style={styles.currencyNameView}>
-          {currency.name ? <Text  style={styles.currencyName}>{currency.name}</Text> : null}
-          {currency.full_name ? <Text style={styles.currencyFullName}>{currency.full_name}</Text> : null}
-        </View>
-        {children}
-  </TouchableOpacity >) : null
-
-  );
+   baseCurrencyView(){
+     return (
+       <React.Fragment>
+     {
+       this.state.imageExists ? (<Image source={this.state.imageSource} style={this.styles.flag} />) : (
+         <View style={this.styles.flag}><Text
+           style={this.styles.flagText}>{this.props.currency.symbol === "" ? "?" : this.props.currency.symbol}</Text></View>)
+     }
+     <View style={this.styles.currencyNameView}>
+       {this.props.currency.name ? <Text style={this.styles.currencyName}>{this.props.currency.name}</Text> : null}
+       {this.props.currency.full_name ? <Text style={this.styles.currencyFullName}>{this.props.currency.full_name}</Text> : null}
+     </View>
+       </React.Fragment>
+     )
+   }
 
 
-};
+  render() {
+
+    let flag = "https://wise.com/public-resources/assets/flags/rectangle/" + this.props.currency.name.toLowerCase() + ".png";
+    if (this.props.currency.imageUrl)
+      flag = this.props.currency.imageUrl;
+
+    return (
+      (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
+        (<TouchableOpacity onPress={() => this.props.onPress(this.props.currency)} style={this.styles.container}>
+          {this.baseCurrencyView()}
+        </TouchableOpacity>) : null
+
+    );
+
+
+  }
+}
 
 export default CurrencyElementBase;
 

@@ -1,67 +1,73 @@
 import React, { useContext, useEffect, useState } from "react";
 import {  Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ThemeContext, ThemeType } from "./ThemeContext";
-import { Colors } from "../theme";
-import { useTheme } from "@react-navigation/native";
-import { Currency, CurrencyType } from "./Currency";
-import CurrencyElementBase from "./CurrencyElementBase";
+import CurrencyElementBase, { Props as BaseProps } from "./CurrencyElementBase";
 import Checkbox from 'expo-checkbox';
 
 
-interface Props {
-  currency: Currency;
-  onPress: (params: any) => void;
-  stateSelection: boolean;
-}
+class CurrencyElementSelector extends CurrencyElementBase {
 
-const CurrencyElementSelector: React.FC<Props> = ({ currency, onPress, stateSelection}) => {
-
-  const { theme } = useContext<ThemeType>(ThemeContext);
-
-  const [isSelected, setSelection] = useState(stateSelection);
-
-
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    checkboxContainer: {
-      flexDirection: 'row',
-      marginBottom: 20,
-    },
-    checkbox: {
-      alignSelf: 'center',
-    },
-    label: {
-      margin: 8,
-    },
-  });
-
-   function selectCurrency() {
-     const selection = !isSelected;
-     setSelection(selection);
-     onPress(currency, selection);
-/*    const selection = !isSelected;
-    setSelection(selection);
-    onPress(currency, selection);*/
+  state = {
+    ...this.state,
+    isSelected: false
   }
 
-  return (
-    <CurrencyElementBase currency={currency} onPress={selectCurrency}>
-      <Checkbox
-        value={isSelected}
-        onValueChange={() =>  selectCurrency()}
-        style={styles.checkbox}
-      />
-    </CurrencyElementBase>
+  selectCurrency() {
+    const selection = !this.state.isSelected;
 
+    this.setState({
+      isSelected: selection
+    })
+     this.props.onPress(this.props.currency.name, selection);
+  }
+
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.setState({isSelected: this.props.stateSelection})
+  }
+
+/*  componentDidUpdate(prevProps) {
+
+  }*/
+
+
+  styles = StyleSheet.create(
+    Object.assign({},
+      this.styles,
+      {
+        checkboxContainer: {
+          flexDirection: "row",
+          marginBottom: 20
+        },
+        checkbox: {
+          alignSelf: "center"
+        },
+        label: {
+          margin: 8
+        }
+      })
   );
 
 
-};
+  render() {
+    super.render();
+
+      return (
+        (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
+          (<TouchableOpacity onPress={() =>  this.selectCurrency()} style={this.styles.container}>
+            {this.baseCurrencyView()}
+            <Checkbox
+              value={this.state.isSelected}
+              onValueChange={() =>  this.selectCurrency()}
+              style={this.styles.checkbox}
+            />
+          </TouchableOpacity>) : null
+
+      );
+
+
+    }
+}
 
 export default CurrencyElementSelector;
 
