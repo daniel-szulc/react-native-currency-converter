@@ -33,13 +33,19 @@ function defaultSelectedCurrency(data: Data){
   const localCurrency = getLocales()[0].currencyCode
 
   return [
+    ...data.currency.filter((currency) => ['USD', 'EUR', localCurrency].includes(currency.name)),
+    ...data.crypto.filter((currency) => ['BTC', 'ETC'].includes(currency.name))
+  ]
+
+  return [
     ...data.currency.filter((currency) => ['USD', 'EUR', 'JPY', 'GBP', 'CAD', 'CHF', 'AUD', localCurrency].includes(currency.name)),
     ...data.crypto.filter((currency) => ['BTC', 'VOXEL', 'RPL', 'HOPR', 'BSV', 'BCH', 'ETC'].includes(currency.name))
   ]
 }
 
-export async function updateData(selectedData: Currency[] | undefined): Promise<Data> {
-  const data = defaultData;
+export async function updateData(currentData: Data | undefined): Promise<Data> {
+
+  const data = currentData ? currentData : defaultData;
   try {
     const currencyService = new CurrencyService();
     try {
@@ -57,11 +63,12 @@ export async function updateData(selectedData: Currency[] | undefined): Promise<
     console.error(error);
   }
 
-  if(selectedData)
+  if(data.selectedCurrencies)
   {
-    if(selectedData.length>0) {
+    console.log("SELECTED CURRECNIES: " + data.selectedCurrencies.length)
+    if(data.selectedCurrencies.length>0) {
       data.selectedCurrencies = [...data.currency, ...data.crypto].filter((currency) => {
-        return selectedData.some((selectedCurrency) => selectedCurrency.name === currency.name);
+        return data.selectedCurrencies.some((selectedCurrency) => selectedCurrency.name === currency.name);
       });
     }
     else {

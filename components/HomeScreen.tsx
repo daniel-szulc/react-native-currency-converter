@@ -17,6 +17,7 @@ import { IconButton } from "@react-native-material/core";
 import { Currency } from "./Currency";
 import { Data, getLocalData, updateData } from "./Data";
 import InputValueModal from "./InputValueModal";
+import { da } from "date-fns/locale";
 
 
 
@@ -27,7 +28,7 @@ export function formatLastUpdate(lastUpdate: string | undefined): string {
   return i18n.t("Last update") + ": " + date.toLocaleString() ;
 }
 
-function HomeScreen({navigation})  {
+function HomeScreen({route, navigation})  {
 
 
 
@@ -36,12 +37,24 @@ function HomeScreen({navigation})  {
   const [data, setData] = useState<Data>();
 
 
+  const [selectedCopy, setSelectedCopy] = useState([]);
 
 
   const [providedAmount, setProvidedAmount] = useState(1);
   const [refreshing, setRefreshing] = React.useState(false);
 
   React.useEffect(() => {
+
+    console.log(data?.selectedCurrencies.length)
+
+    try {
+      const {selectedCurrenciesTest } = route.params;
+      if(selectedCurrenciesTest)
+        console.log(selectedCurrenciesTest)
+    }catch (e) {
+      //ignore
+    }
+
     navigation.setOptions(({
       headerTitle: i18n.t('currencyConverter'),
       headerRight: () => (
@@ -79,18 +92,30 @@ function HomeScreen({navigation})  {
 
   React.useEffect(() => {
 
+    console.log("DATA was changed")
 
+    console.log(data?.selectedCurrencies.length)
+
+    if(data)
+      setSelectedCopy([...data?.selectedCurrencies])
 
     convertValue(providedAmount);
 
   }, [data]);
 
   const onRefresh = React.useCallback(() => {
+
+    console.log("onRefresh HomeScreen: " + data?.selectedCurrencies.length)
+
   setRefreshing(true);
     fetchData();
   }, []);
 
   const fetchData = async () => {
+
+    console.log("Fetch Data")
+    console.log("Data Length: " + data?.selectedCurrencies.length)
+    console.log("Copy Length: " + selectedCopy.length)
 
     try {
       if(!data)
@@ -99,14 +124,13 @@ function HomeScreen({navigation})  {
         setData(localData);
       }
 
-      const newData = await updateData(data?.selectedCurrencies);
+      const newData = await updateData(data);
       setData(newData);
       setRefreshing(false);
     } catch (error) {
       console.error(error);
     }
   };
-
 
 
 
@@ -175,11 +199,22 @@ function HomeScreen({navigation})  {
 
   });
 
-  function setSelectedCurrencies(selectedCurrencies : Currency[]) {
+  const setSelectedCurrencies = (selectedCurrencies : Currency[]) => {
 
-    setData((prevData) => {
+
+
+
+   // console.log(selectedCurrencies)
+    console.log(data?.selectedCurrencies.length)
+
+/*    setData((prevData) => {
       return ({ ...prevData, selectedCurrencies: selectedCurrencies });
-    });
+    });*/
+
+    setData({...data, selectedCurrencies: selectedCurrencies})
+
+    console.log(data?.selectedCurrencies.length)
+
   }
 
   function selectCurrency(selectedCurrency : Currency) {
@@ -214,7 +249,7 @@ function HomeScreen({navigation})  {
         </ScrollView>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => navigation.navigate('Selector', {data: data, setSelectedCurrencies: setSelectedCurrencies})}
+          onPress={() => navigation.navigate('Selector', {data: data, setSelectedCurrencies: setSelectedCurrencies })}
           style={styles.touchableOpacityStyle}>
           <MaterialCommunityIcons name="web-plus" size={30} color="white" />
         </TouchableOpacity>

@@ -21,7 +21,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import CurrencyElementSelector from "./CurrencyElementSelector";
 import { MaterialIcons } from '@expo/vector-icons';
-
+import { Feather } from '@expo/vector-icons';
+import { setData } from "./Data";
 
 const CurrencySelector = ({route, navigation}) =>{
 
@@ -46,7 +47,10 @@ const CurrencySelector = ({route, navigation}) =>{
         }
       }
 
-    setSelectedCurrencies(new_selected)
+    //setSelectedCurrencies(new_selected)
+
+    setData({...data, selectedCurrencies: new_selected})
+
     selectedCurrencyRef.current = new_selected;
 
   }
@@ -85,12 +89,12 @@ const CurrencySelector = ({route, navigation}) =>{
     },
     touchableOpacityStyle: {
       position: 'absolute',
-      width: 60,
-      height: 60,
+      width: 55,
+      height: 55,
       alignItems: 'center',
       justifyContent: 'center',
       alignSelf: 'center',
-      bottom: 30,
+      bottom: 22.5,
       backgroundColor: Colors[theme]?.primary,
       borderRadius: 30,
     },
@@ -212,7 +216,7 @@ const CurrencySelector = ({route, navigation}) =>{
               if (route.name === 'Cryptocurrency') {
                 iconName="bitcoin";
               } else if (route.name === 'Traditional currency') {
-                iconName="money-bill";
+                iconName="coins";
               }
 
               // You can return any component that you like here!
@@ -229,6 +233,16 @@ const CurrencySelector = ({route, navigation}) =>{
 
 
       </View> :  <CurrencyView currencies={filteredData}/>}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+        //  navigation.setParams({selectedCurrenciesTest: selectedCurrencyRef.current})
+          navigation.navigate("Home", {selectedCurrenciesTest: selectedCurrencyRef.current});
+        }}
+        style={styles.touchableOpacityStyle}>
+        <FontAwesome name="check" size={25} color="white" />
+
+      </TouchableOpacity>
     </SafeAreaView>
   );
 

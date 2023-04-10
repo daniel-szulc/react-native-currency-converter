@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {  Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CurrencyElementBase, { Props as BaseProps } from "./CurrencyElementBase";
 import Checkbox from 'expo-checkbox';
+import { Colors } from "../theme";
 
 
 class CurrencyElementSelector extends CurrencyElementBase {
@@ -35,15 +36,11 @@ class CurrencyElementSelector extends CurrencyElementBase {
     Object.assign({},
       this.styles,
       {
-        checkboxContainer: {
-          flexDirection: "row",
-          marginBottom: 20
-        },
         checkbox: {
-          alignSelf: "center"
-        },
-        label: {
-          margin: 8
+          alignSelf: "center",
+          marginVertical: 5,
+          marginHorizontal: 10,
+
         }
       })
   );
@@ -60,6 +57,7 @@ class CurrencyElementSelector extends CurrencyElementBase {
               value={this.state.isSelected}
               onValueChange={() =>  this.selectCurrency()}
               style={this.styles.checkbox}
+              color={this.state.isSelected ? Colors[this.props.theme].primary : undefined}
             />
           </TouchableOpacity>) : null
 
