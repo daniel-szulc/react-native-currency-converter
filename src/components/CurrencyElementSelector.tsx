@@ -3,7 +3,7 @@ import {  Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CurrencyElementBase, { Props as BaseProps } from "./CurrencyElementBase";
 import Checkbox from 'expo-checkbox';
 import { Colors } from "../theme";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../theme/ThemeContext";
 
 
 class CurrencyElementSelector extends CurrencyElementBase {

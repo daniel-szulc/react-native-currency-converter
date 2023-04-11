@@ -10,23 +10,23 @@ import {
 } from "react-native";
 
 import { FontAwesome5, FontAwesome  } from '@expo/vector-icons';
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { memo, useCallback, useContext, useMemo, useRef } from "react";
 import { Colors } from "../theme";
-import { ThemeContext, ThemeType } from "./ThemeContext";
+import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import i18n from "i18next";
 
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import CurrencyElementSelector from "./CurrencyElementSelector";
+import CurrencyElementSelector from "../components/CurrencyElementSelector";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { setData } from "./Data";
+import { setData } from "../data/SaveData";
+import DisplaySize from "../data/DisplaySize";
 
 const CurrencySelector = ({route, navigation}) =>{
 
-  const { data, setSelectedCurrencies } = route.params;
+  const { data } = route.params;
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   const [search, setSearch] = React.useState('');
@@ -47,7 +47,7 @@ const CurrencySelector = ({route, navigation}) =>{
         }
       }
 
-    //setSelectedCurrencies(new_selected)
+
 
     setData({...data, selectedCurrencies: new_selected})
 
@@ -149,9 +149,11 @@ const CurrencySelector = ({route, navigation}) =>{
         initialNumToRender={5}
         updateCellsBatchingPeriod={1000}
         maxToRenderPerBatch={3}
-        style={{ flexGrow: 1, paddingVertical: 5, paddingBottom: 30}}
+        style={{ flexGrow: 1}}
         contentInsetAdjustmentBehavior="automatic"
         ListEmptyComponent = {EmptyList()}
+        contentContainerStyle={{paddingVertical: DisplaySize[data.settings.size].space}}
+
         keyExtractor={(item) => item.name}
         renderItem={({ item } ) => <RenderItemComponent item={item} />}/>
     </View>);
@@ -190,10 +192,11 @@ const CurrencySelector = ({route, navigation}) =>{
   const RenderItemComponent = ({ item }) => {
 
 
+
     const index = selectedCurrencyRef.current ? selectedCurrencyRef.current.findIndex(currency => currency.name === item.name) : -1;
     const isSelected = index !== -1;
     return (
-      <CurrencyElementSelector currency={item} onPress={selectCurrency} stateSelection={isSelected} theme={theme}/>
+      <CurrencyElementSelector currency={item} onPress={selectCurrency} stateSelection={isSelected} theme={theme} displaySize={data.settings.size}/>
     )
   }
 
@@ -219,7 +222,6 @@ const CurrencySelector = ({route, navigation}) =>{
                 iconName="coins";
               }
 
-              // You can return any component that you like here!
               return <FontAwesome5 name={iconName} size={24} color={focused ? Colors[theme].white : Colors[theme].disabled} />
             },
             tabBarActiveTintColor: Colors[theme].white,

@@ -7,16 +7,18 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import CurrencyElement from "./CurrencyElement";
+import CurrencyElement from "../components/CurrencyElement";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Colors } from "../theme";
-import { ThemeContext, ThemeType } from "./ThemeContext";
+import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import i18n from "i18next";
 import { IconButton } from "@react-native-material/core";
-import { Currency } from "./Currency";
-import { Data, defaultData, getLocalData, getSelectedCurrencies, updateData } from "./Data";
-import InputValueModal from "./InputValueModal";
+import { Currency } from "../components/Currency";
+import { getLocalData, setData, updateData } from "../data/SaveData";
+import InputValueModal from "../components/InputValueModal";
+import DefaultData from "../data/DefaultData";
+import DisplaySize from "../data/DisplaySize";
 
 
 
@@ -27,7 +29,7 @@ export function formatLastUpdate(lastUpdate: string | undefined): string {
   return i18n.t("Last update") + ": " + date.toLocaleString() ;
 }
 
-class HomeScreen extends React.Component {
+class Home extends React.Component {
 
   static contextType = ThemeContext;
 
@@ -35,21 +37,13 @@ class HomeScreen extends React.Component {
     super(props);
 
     this.state = {
-      data: defaultData,
-      selectedCopy: [],
+      data: DefaultData,
       refreshing: false,
       modalVisible: false,
-      isGoingBack: false
+      isGoingBack: false,
+      tempSelected: undefined,
     };
   }
-
-  setSelectedCurrencies = (selectedCurrencies) => {
-    this.setState((prevState) => ({
-      data: { ...prevState.data, selectedCurrencies }
-    }));
-  };
-
-
 
 
   updateHeader(){
@@ -63,19 +57,8 @@ class HomeScreen extends React.Component {
           <IconButton
             icon={(props) => (
               <Ionicons
-                onPress={() => navigation.navigate("Settings")}
+                onPress={() => navigation.navigate("Settings", {settings: this.state.data.settings})}
                 name="settings-sharp"
-                size={24}
-                color={Colors[theme]?.white}
-              />
-            )}
-            color="primary"
-          />
-          <IconButton
-            onPress={this.toggleTheme}
-            icon={(props) => (
-              <MaterialCommunityIcons
-                name="theme-light-dark"
                 size={24}
                 color={Colors[theme]?.white}
               />
@@ -87,26 +70,44 @@ class HomeScreen extends React.Component {
     });
   }
 
+  loadData = async() =>
+  {
+    const localData = await getLocalData();
+
+    await this.setState({ data: localData });
+    const {changeTheme} = this.context;
+    changeTheme(localData.settings.theme)
+    i18n.changeLanguage(localData.settings.language)
+    this.fetchData();
+  }
 
   componentDidMount() {
 
     const { navigation } = this.props;
     const { theme } = this.context;
+
+
+
     navigation.setOptions({
       headerTitle: i18n.t("currencyConverter"),
     });
 
+
+
     this.updateHeader();
 
-    this.fetchData();
+    this.loadData();
 
     navigation.addListener('focus', async () => {
-      const newSelected = await getSelectedCurrencies();
-      if(newSelected)
-        this.setState((prevState) => ({
-          data: { ...prevState.data, selectedCurrencies: newSelected }
+      const newData = await getLocalData();
+      if(newData) {
+        await this.setState((prevState) => ({
+          data: { ...prevState.data, selectedCurrencies: newData.selectedCurrencies, settings: newData.settings }
         }));
+       this.convertValue(this.state.data.providedAmount)
+      }
     });
+
 
 
 }
@@ -126,10 +127,7 @@ componentDidUpdate(prevProps, prevState) {
   fetchData = async () => {
 
     try {
-      if (!this.state.data) {
-        const localData = await getLocalData();
-        this.setState({ data: localData });
-      }
+
       const newData = await updateData(this.state.data);
       this.setState({ data: newData, refreshing: false });
       this.convertValue(this.state.data.providedAmount);
@@ -137,34 +135,43 @@ componentDidUpdate(prevProps, prevState) {
       console.error(error);
     }
   };
-  toggleTheme = () => {
-    const { toggleTheme } = this.context;
-    toggleTheme();
-  };
+
+  saveData = () => {
+    setData(this.state.data);
+  }
 
 
 
 
-  selectCurrency = (selectedCurrency) => {
-    if (!selectedCurrency) return;
-    this.setState(prevState => ({
-      data: {
-        ...prevState.data,
-      selectedCurrency: selectedCurrency},
-      modalVisible: true }));
-  };
-
-  setModalVisible = (visible) => {
+    setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
 
+  selectTempCurrency = (selectedCurrency) => {
+    if (!selectedCurrency) return;
+    this.setState({
+      tempSelected: selectedCurrency
+    });
+    this.setModalVisible(true);
+  };
 
   convertValue = (value: number) => {
+
     const { selectedCurrencies } = this.state.data;
+    let  currencyBase = this.state.data.selectedCurrency;
+    if(this.state.tempSelected) {
+      currencyBase = this.state.tempSelected;
+
+      this.setState(prevState => ({
+        data: {
+          ...prevState.data,
+          selectedCurrency: currencyBase}
+      }));
+    };
 
     if (selectedCurrencies) {
       const updatedCurrencies = selectedCurrencies.map(currency => {
-        const rateBase = currency.rate / this.state.data.selectedCurrency?.rate;
+        const rateBase = currency.rate / currencyBase.rate;
         const result = value * rateBase;
         return {
           ...currency,
@@ -177,7 +184,7 @@ componentDidUpdate(prevProps, prevState) {
           selectedCurrencies: updatedCurrencies,
           providedAmount: value
         }
-      }));
+      }), () => this.saveData());
     }
   }
 
@@ -245,17 +252,18 @@ componentDidUpdate(prevProps, prevState) {
     return (
       <SafeAreaView style={styles.container}>
 
-        <InputValueModal selectedCurrency={this.state.data.selectedCurrency} modalVisible={modalVisible}
+        <InputValueModal selectedCurrency={this.state.tempSelected ? this.state.tempSelected : this.state.data.selectedCurrency} modalVisible={modalVisible}
                          setModalVisible={this.setModalVisible} convertValue={this.convertValue} />
 
         <View style={styles.container}>
-          <ScrollView style={{ paddingVertical: 5 }}
+          <ScrollView
                       refreshControl={
                         <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
           >
+            <View style={{height: DisplaySize[this.state.data.settings.size].space}}/>
             {
               this.state.data?.selectedCurrencies.map((currency) =>
-                <CurrencyElement onPress={this.selectCurrency} currency={currency} />
+                <CurrencyElement key={currency.name} onPress={this.selectTempCurrency} currency={currency} displaySize={this.state.data.settings.size}/>
               )
             }
             <Text style={{
@@ -264,12 +272,12 @@ componentDidUpdate(prevProps, prevState) {
               marginHorizontal: 10,
               color: Colors[theme]?.darkWhite
             }}>{formatLastUpdate(this.state.data?.lastUpdate)}</Text>
+            <View style={{height: DisplaySize[this.state.data.settings.size].space}}/>
           </ScrollView>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => this.props.navigation.navigate("Selector", {
-              data: this.state.data,
-              setSelectedCurrencies: this.setSelectedCurrencies
+              data: this.state.data
             })}
             style={styles.touchableOpacityStyle}>
             <MaterialCommunityIcons name="web-plus" size={30} color="white" />
@@ -281,4 +289,4 @@ componentDidUpdate(prevProps, prevState) {
   }
 }
 
-export default HomeScreen;
+export default Home;

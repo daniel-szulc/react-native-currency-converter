@@ -1,32 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Currency } from "./Currency";
-import { CurrencyService } from "./CurrencyService";
+import { Currency } from "../components/Currency";
+import { CurrencyService } from "../service/CurrencyService";
 import { getLocales } from 'expo-localization';
-import { da } from "date-fns/locale";
-import { useEffect } from "react";
+import DefaultData from "./DefaultData";
+import {Data, Settings} from './Data'
 
 
-export interface Data {
-  currency: Currency[];
-  crypto: Currency[];
-  selectedCurrencies: Currency[];
-  theme: string;
-  lastUpdate: string;
-  providedAmount: number;
-  selectedCurrency: Currency | undefined;
-}
-
-
-
-export const defaultData: Data = {
-  currency: [],
-  crypto: [],
-  selectedCurrencies: [],
-  theme: "light",
-  lastUpdate: "",
-  providedAmount: 1,
-  selectedCurrency: undefined
-};
 
 const STORAGE_KEY = "@data";
 
@@ -35,19 +14,15 @@ function defaultSelectedCurrency(data: Data){
   const localCurrency = getLocales()[0].currencyCode
 
   return [
-    ...data.currency.filter((currency) => ['USD', 'EUR', localCurrency].includes(currency.name)),
-    ...data.crypto.filter((currency) => ['BTC', 'ETC'].includes(currency.name))
+    ...data.currency.filter((currency) => ['USD', 'EUR', 'JPY', 'GBP', localCurrency].includes(currency.name)),
+    ...data.crypto.filter((currency) => ['BTC', 'ETH'].includes(currency.name))
   ]
 
-  return [
-    ...data.currency.filter((currency) => ['USD', 'EUR', 'JPY', 'GBP', 'CAD', 'CHF', 'AUD', localCurrency].includes(currency.name)),
-    ...data.crypto.filter((currency) => ['BTC', 'VOXEL', 'RPL', 'HOPR', 'BSV', 'BCH', 'ETC'].includes(currency.name))
-  ]
 }
 
 export async function updateData(currentData: Data | undefined): Promise<Data> {
 
-  const data = currentData ? currentData : defaultData;
+  const data = currentData ? currentData : DefaultData;
   try {
     const currencyService = new CurrencyService();
     try {
@@ -95,11 +70,22 @@ export async function getSelectedCurrencies(): Promise<Currency[]> {
 }
 
 export async function getLocalData(): Promise<Data> {
-  let data = defaultData;
+  let data:Data = DefaultData;
   try {
     const value = await AsyncStorage.getItem(STORAGE_KEY);
     if (value !== null) {
-      data = JSON.parse(value);
+      const parsedValue: Partial<Data> = JSON.parse(value);
+
+      data = {
+        ...DefaultData,
+        ...parsedValue,
+        settings: {
+          ...DefaultData.settings,
+          ...parsedValue.settings,
+        },
+      };
+    }
+    else {
     }
   } catch (error) {
     console.error(error);
@@ -108,6 +94,15 @@ export async function getLocalData(): Promise<Data> {
   return data;
 }
 
+export async function setSettingsData(settings: Settings): Promise<void> {
+  try {
+    let data: Data = await getLocalData();
+    data = {...data, settings: settings}
+    await setData(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export async function setData(data: Data): Promise<void> {
   try {

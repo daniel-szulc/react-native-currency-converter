@@ -1,1 +1,1 @@
-export default {"welcome":"Hallo"}
+export default {"lang":"Deutsch","welcome":"Hallo"}

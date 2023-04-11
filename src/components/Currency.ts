@@ -1,8 +1,8 @@
 import { Image } from "react-native";
 
 export enum CurrencyType{
-  Currency,
-  Crypto
+  Currency = "currency",
+  Crypto = "crypto"
 }
 
 export interface Currency {

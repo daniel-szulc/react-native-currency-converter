@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Currency, CurrencyType } from "./Currency";
-import currenciesDetails from "./common-currencies";
-import { useEffect } from "react";
+import { Currency, CurrencyType } from "../components/Currency";
+import currenciesDetails from "../utils/common-currencies";
+
 
 interface CurrencyServiceProps {
   currencies: Currency[];
@@ -10,22 +10,10 @@ interface CurrencyServiceProps {
 }
 
 export class CurrencyService {
-/*  private currencies: Currency[] = [];
-  private lastUpdate = "";
-
-  public getCurrencies() {
-    return this.currencies;
-  }
-
-  public getLastUpdate() {
-    return this.lastUpdate;
-  }*/
 
   public async getCurrenciesPromise(lastUpdate?: string ): Promise<CurrencyServiceProps | undefined>  {
 
       try {
-       // const response = await axios.get<any>('https://open.er-api.com/v6/latest/USD');
-        //const response = await axios.get<any>( 'https://api.exchangerate.host/latest?base=USD');
         const response = await axios.get<any>( 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
 
         const allCurrencies: Currency[] = [];
@@ -56,9 +44,6 @@ export class CurrencyService {
             allCurrencies.splice(index, 1);
           }
         })
-
-
-
 
         const extraCurrenciesDetails = await  axios.get<any> ('https://api.exchangerate.host/symbols');
 

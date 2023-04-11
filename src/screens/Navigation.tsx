@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { ThemeContext } from './ThemeContext';
-import HomeScreen from "./HomeScreen";
+import { ThemeContext } from '../theme/ThemeContext';
+import Home from "./Home";
 import Settings from "./Settings";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CurrencySelector from "./CurrencySelector";
@@ -14,7 +14,7 @@ export default function Navigation() {
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
+          component={Home}
           options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen

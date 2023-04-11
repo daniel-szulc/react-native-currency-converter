@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { Colors } from "../theme";
-import { ThemeContext, ThemeType } from "./ThemeContext";
+import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import { Currency } from "./Currency";
 import i18n from "i18next";
 

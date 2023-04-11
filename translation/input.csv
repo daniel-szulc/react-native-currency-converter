@@ -1,4 +1,5 @@
 i18n=>,en,pl,de
+lang,English,Polski,Deutsch
 welcome,Welcome,Witaj,Hallo
 currencyConverter,Currency Converter,Konwerter walut
 settings,Settings,Ustawienia,
@@ -9,3 +10,16 @@ Traditional currency,Traditional currency,Tradycyjna waluta
 Add currency,Add currency,Dodaj walutę
 Search currency,Search currency,Znajdź walutę
 No results found,No results found,Nie znaleziono wyników
+Theme,Theme,Motyw
+dark,Dark,Ciemny
+light,Light,Jasny
+Language,Language,Język
+Cancel,Cancel,Anuluj
+default,Default,Domyślny,
+small,Small,Mały,
+large,Large,Duży,
+Display size,Display size,Rozmiar wyświetlania,
+Rate in Google Play,Rate in Google Play,Oceń w Google Play,
+Feedback,Feedback,Kontakt,
+Privacy Policy,Privacy Policy,Polityka prywatności,
+Data source,Data source,Źródło danych

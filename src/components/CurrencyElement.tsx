@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ThemeContext, ThemeType } from "./ThemeContext";
+import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import { Colors } from "../theme";
 import { useTheme } from "@react-navigation/native";
 import { Currency, CurrencyType } from "./Currency";
 import CurrencyElementBase from "./CurrencyElementBase";
+import DisplaySize from "../data/DisplaySize";
 
 
 class CurrencyElement extends CurrencyElementBase {
@@ -25,8 +26,7 @@ class CurrencyElement extends CurrencyElementBase {
         {
           currencyValue: {
             color: Colors[this.context.theme]?.primaryText,
-
-            fontSize: 16
+            fontSize: DisplaySize[this.props.displaySize].fontSizeValue,
           }
         }));
     }

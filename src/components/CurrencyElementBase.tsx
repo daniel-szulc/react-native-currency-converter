@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ThemeContext, ThemeType } from "./ThemeContext";
+import { ThemeContext } from "../theme/ThemeContext";
 import { Colors } from "../theme";
-import { useTheme } from "@react-navigation/native";
-import { Currency, CurrencyType } from "./Currency";
-import CurrencyElement from "./CurrencyElement";
+import { CurrencyType } from "./Currency";
+import DisplaySize from "../data/DisplaySize";
 
 /*interface Props {
   currency: Currency;
@@ -24,6 +23,7 @@ state = {
 
 
   componentDidMount(){
+
 
     const {theme} = this.context;
 
@@ -74,10 +74,10 @@ state = {
         alignItems: "center",
         backgroundColor: Colors[theme]?.lightThemeColor,
         marginHorizontal: 10,
-        marginTop: 5,
-        marginBottom: 5,
+        marginTop: DisplaySize[this.props.displaySize].space,
+        marginBottom: DisplaySize[this.props.displaySize].space,
         padding: 10,
-        paddingVertical: 8,
+        paddingVertical: DisplaySize[this.props.displaySize].padding,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
@@ -87,10 +87,11 @@ state = {
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
         elevation: 3
-
+      },
+      text:{
+        fontSize: DisplaySize[this.props.displaySize].fontSize,
       },
       currencyName: {
-
         color: Colors[theme]?.darkWhite
       },
       currencyFullName: {
@@ -101,19 +102,16 @@ state = {
         flex: 1,
         paddingHorizontal: 10,
         marginVertical: -1,
-        textAlign: "left"
-      },
-      currencyValue: {
-        color: Colors[theme]?.primaryText,
-        fontSize: 16
+        textAlign: "left",
+
       },
       flag: {
-        width: this.props.currency.type === CurrencyType.Crypto ? 36 : 42,
-        height: this.props.currency.type === CurrencyType.Crypto ? 36 : 28,
+        width: DisplaySize[this.props.displaySize].flagSize[this.props.currency.type].width,
+        height: DisplaySize[this.props.displaySize].flagSize[this.props.currency.type].height,
         borderRadius: 5,
         justifyContent: "center",
         alignItems: "center",
-        marginHorizontal: this.props.currency.type === CurrencyType.Crypto ? 3 : 0,
+        marginHorizontal: DisplaySize[this.props.displaySize].flagSize[this.props.currency.type].margin,
         borderColor: Colors[theme]?.darkWhite,
         borderWidth: this.state.imageExists ? undefined : 0.5
       },
@@ -149,8 +147,8 @@ state = {
            style={this.styles.flagText}>{this.props.currency.symbol === "" ? "?" : this.props.currency.symbol}</Text></View>)
      }
      <View style={this.styles.currencyNameView}>
-       {this.props.currency.name ? <Text style={this.styles.currencyName}>{this.props.currency.name}</Text> : null}
-       {this.props.currency.full_name ? <Text style={this.styles.currencyFullName}>{this.props.currency.full_name}</Text> : null}
+       {this.props.currency.name ? <Text style={[this.styles.text, this.styles.currencyName]}>{this.props.currency.name}</Text> : null}
+       {this.props.currency.full_name ? <Text style={[this.styles.text, this.styles.currencyFullName]}>{this.props.currency.full_name}</Text> : null}
      </View>
        </React.Fragment>
      )
