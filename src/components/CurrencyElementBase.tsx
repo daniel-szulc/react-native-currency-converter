@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Colors } from "../theme";
 import { CurrencyType } from "./Currency";

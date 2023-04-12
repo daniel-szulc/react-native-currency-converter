@@ -64,11 +64,6 @@ export async function updateData(currentData: Data | undefined): Promise<Data> {
 }
 
 
-export async function getSelectedCurrencies(): Promise<Currency[]> {
-  const data = await getLocalData();
-  return data.selectedCurrencies;
-}
-
 export async function getLocalData(): Promise<Data> {
   let data:Data = DefaultData;
   try {

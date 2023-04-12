@@ -12,11 +12,14 @@ import DisplaySize from "../data/DisplaySize";
 import { setSettingsData } from "../data/SaveData";
 
 
+
+
+
 const  Settings = ({route, navigation}) => {
 
   const policyUrl = "https://daniel-szulc.github.io/CurrencyConverter/PrivacyPolicy";
   const rateUrl = "https://play.google.com/store/apps/details?id=com.DanielSzulc.CurrencyConverter";
-
+  const mailUrl = 'mailto:dszulc.dev@gmail.com?subject=CurrencyConverter'
   const { settings } = route.params;
 
   const [mySettings, setSettings] = React.useState(settings);
@@ -56,14 +59,23 @@ const  Settings = ({route, navigation}) => {
     setSettingsData(mySettings);
   }, [mySettings]);
 
+  const dataSourceInfo = () => {
+    return (
+      i18n.t("dataSourceInfo-exchange") + "\n\n"
+      + i18n.t("dataSourceInfo-currency") + "\n\n"
+      + i18n.t("dataSourceInfo-crypto") + "\n\n"
+      + i18n.t("dataSourceInfo-flags")
+    )
+  }
+
   const settingsOptions = [
     {icon: <MaterialCommunityIcons name="theme-light-dark" size={iconSize} color={getColor()}/>, title: i18n.t('Theme'), subTitle: i18n.t(theme), onPress: changeTheme},
     {icon: <Ionicons name="language" size={iconSize} color={getColor()} />, title: i18n.t('Language'), subTitle: i18n.t('lang'), onPress: changeLanguage, selectElements: languages, selected: i18n.language},
     {icon: <MaterialIcons name="table-rows" size={iconSize} color={getColor()} />, title: i18n.t('Display size'), subTitle: i18n.t(mySettings.size), onPress: changeDisplaySize, selectElements: displaySizes, selected: mySettings.size},
     {icon: <FontAwesome5 name="google-play"size={iconSize} color={getColor()} />, title: i18n.t('Rate in Google Play'), subTitle: null, onPress: () => {Linking.openURL(rateUrl).catch((err) => console.error('An error occurred', err));}},
-    {icon: <MaterialIcons name="feedback" size={iconSize} color={getColor()}/>, title: i18n.t('Feedback'), subTitle: null, onPress: () => {}},
+    {icon: <MaterialIcons name="feedback" size={iconSize} color={getColor()}/>, title: i18n.t('Feedback'), subTitle: null, onPress: () =>  {}, infoDialog: "sendFeedbackEmail", button: {title: "email", onPress: () => {Linking.openURL(mailUrl).catch((err) => console.error('An error occurred', err));} }},
     {icon: <MaterialIcons name="policy" size={iconSize} color={getColor()}/>, title: i18n.t('Privacy Policy'), subTitle: null, onPress: () => {Linking.openURL(policyUrl).catch((err) => console.error('An error occurred', err));}},
-    {icon: <FontAwesome5 name="database"  size={iconSize} color={getColor()}/>, title: i18n.t('Data source'), subTitle: null, onPress: () => {}},
+    {icon: <FontAwesome5 name="database"  size={iconSize} color={getColor()}/>, title: i18n.t('Data source'), subTitle: null, onPress: () => {}, infoDialog: dataSourceInfo() },
   ];
 
   React.useEffect(() => {

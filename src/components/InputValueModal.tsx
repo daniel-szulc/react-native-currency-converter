@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Colors } from "../theme";
 import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import { Currency } from "./Currency";
@@ -154,9 +154,10 @@ interface Props {
         visible={modalVisible}
 
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
         }}>
-        <View style={styles.centeredView}>
+        <TouchableOpacity  style={styles.centeredView} activeOpacity={1}
+                           onPressOut={() => {setModalVisible(false)}}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{selectedCurrency?.full_name}</Text>
             <View style={styles.textInputContainer}>
@@ -217,7 +218,7 @@ interface Props {
               <Text style={[styles.textStyle, styles.acceptStyle]}>{i18n.t("Convert")}</Text>
             </Pressable>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
 
     )

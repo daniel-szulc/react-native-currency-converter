@@ -39,7 +39,7 @@ class CurrencyElement extends CurrencyElementBase {
 
     return (
       (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
-        (<TouchableOpacity onPress={() => this.props.onPress(this.props.currency)} style={this.styles.container}>
+        (<TouchableOpacity onPress={() => this.props.onPress(this.props.currency)} onLongPress={() => this.props.onLongPress(this.props.currency)}  style={this.styles.container}>
           {this.baseCurrencyView()}
             <Text style={this.styles.currencyValue}>{this.props.currency.symbol + Math.round(this.props.currency.convertedResult * roundDecimalValue) / roundDecimalValue}</Text>
         </TouchableOpacity>) : null

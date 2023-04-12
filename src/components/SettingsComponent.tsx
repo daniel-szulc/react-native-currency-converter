@@ -4,6 +4,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../theme";
 import { ThemeContext } from "../theme/ThemeContext";
 import SettingsSelectDialog from "./SettingsSelectDialog";
+import InfoDialog from "./InfoDialog";
+import infoDialog from "./InfoDialog";
+import { use } from "i18next";
+import ContactDialog from "./ContactDialog";
 
 
 const SettingsComponent = ({
@@ -13,9 +17,13 @@ const SettingsComponent = ({
   const { theme } = useContext(ThemeContext);
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [dialogElements, setDialogElements] = useState<[]>([]);
+  const [dialogType, setDialogType] = useState("");
   const [titleDialog, setTitleDialog] = useState("");
+  const [infoDialog, setInfoDialog] = useState("");
   const [dialogVisible, setDialogVisible] = useState(false); // stan określający widoczność Modal
   const [selectionOnPress, setSelectionOnPress] = useState();
+  const [infoButton, setInfoButton] = useState();
+
   const handleItemSelected = (item: string) => {
 
     if(selectionOnPress)
@@ -24,17 +32,30 @@ const SettingsComponent = ({
 
   return (
     <>
-      <SettingsSelectDialog title={titleDialog} modalElements={dialogElements} selectedElement={selectedItem} onItemSelected={handleItemSelected} modalVisible={dialogVisible} setModalVisible={setDialogVisible}  />
+      {dialogType=="select" && <SettingsSelectDialog title={titleDialog} modalElements={dialogElements} selectedElement={selectedItem} onItemSelected={handleItemSelected} modalVisible={dialogVisible} setModalVisible={setDialogVisible}  />}
+      {dialogType=="info" &&  <InfoDialog title={titleDialog} information={infoDialog} modalVisible={dialogVisible} setModalVisible={setDialogVisible} button={infoButton}/> }
       <ScrollView style={{backgroundColor: Colors[theme].themeColor}}>
-        {settingsOptions.map(({icon, title, subTitle, onPress, selectElements, selected}) => (
+        {settingsOptions.map(({icon, title, subTitle, onPress, selectElements, selected, infoDialog, button}) => (
           <TouchableOpacity key={title} onPress={()=> {
+
             if(selectElements)
             {
+              setDialogType("select")
               setSelectionOnPress((item: string) => onPress);
               setDialogElements(selectElements);
               setTitleDialog(title)
               setDialogVisible(true);
               setSelectedItem(selected);
+            }
+            else if(infoDialog)
+            {
+              setDialogType("info")
+              setTitleDialog(title)
+              setInfoDialog(infoDialog)
+              setDialogVisible(true);
+              if(button)
+                setInfoButton(button)
+              else setInfoButton(undefined);
             }
             else {
               onPress();

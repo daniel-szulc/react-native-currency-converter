@@ -20,6 +20,16 @@ small,Small,Mały,
 large,Large,Duży,
 Display size,Display size,Rozmiar wyświetlania,
 Rate in Google Play,Rate in Google Play,Oceń w Google Play,
-Feedback,Feedback,Kontakt,
+Feedback,Feedback & Support,Opinia i wsparcie,Feedback und Support
 Privacy Policy,Privacy Policy,Polityka prywatności,
 Data source,Data source,Źródło danych
+dataSourceInfo-exchange,The current exchange rate is retrieved from Coinbase via their open public API: api.coinbase.com.,Aktualne kursy walut są pobierane z platformy Coinbase za pomocą ich otwartego publicznego API: api.coinbase.com.,Die aktuellen Wechselkurse werden über die offene öffentliche API von Coinbase unter api.coinbase.com abgerufen.
+dataSourceInfo-currency,Currency information is obtained from exchangerate.host via their open public API: api.exchangerate.host.,Informacje o walutach są pobierane z exchangerate.host za pomocą ich otwartego publicznego API: api.exchangerate.host.,Währungsinformationen werden über die offene öffentliche API von exchangerate.host unter api.exchangerate.host abgerufen.
+dataSourceInfo-crypto,Cryptocurrency information and cryptocurrency images are obtained from CryptoCompare powered by CCData via their open public API: cryptocompare.com.,Informacje o kryptowalutach oraz obrazy kryptowalut są pobierane z CryptoCompare powered by CCData za pomocą ich otwartego publicznego API: cryptocompare.com.,Kryptowährungsinformationen und Kryptowährungsbilder werden über die offene öffentliche API von CryptoCompare powered by CCData unter cryptocompare.com abgerufen.
+dataSourceInfo-flags,Currency flags are retrieved from wise.com.,Flagi walut są pobierane z wise.com. Informacje te są dostępne w ustawieniach aplikacji przelicznika walut w sekcji Źródła danych.,Währungsflaggen werden von wise.com abgerufen.
+sendFeedbackEmail,"Would you like to share your feedback about the app? You can leave a feedback, suggestion, or report an issue via email.","Czy chciałbyś podzielić się swoją opinią na temat aplikacji? Możesz zostawić feedback, propozycje lub zgłosić problem poprzez wiadomość e-mail.","Möchten Sie Ihr Feedback zur App teilen? Sie können ein Feedback, einen Vorschlag hinterlassen oder ein Problem per E-Mail melden."
+email,Email,E-mail,E-mail
+Are you sure you want to delete,Are you sure you want to delete,Czy na pewno chcesz usunąć
+from quick access?,from quick access?,z szybkiego dostępu?
+Remove,Remove,Usuń
+Close,Close,Zamknij

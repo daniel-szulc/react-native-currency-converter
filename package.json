@@ -9,7 +9,8 @@
     "test": "jest",
     "start expo": "expo start",
     "expo emulator": "expo run:android -d Nexus_S_API_33",
-    "preview build": "eas build -p android --profile preview"
+    "preview build": "eas build -p android --profile preview",
+    "production build": "eas build -p android --profile production"
   },
   "version": "0.0.1",
   "dependencies": {
