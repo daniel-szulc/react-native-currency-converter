@@ -6,6 +6,8 @@ const commonColor = {
 };
 
 const light = {
+    common: '#ffffff',
+    darkCommon: '#f5f5f5',
     themeColor: '#efefef',
     lightThemeColor:  '#ffffff',
     darkThemeColor:  '#d0d0d0',
@@ -19,6 +21,8 @@ const light = {
 };
 
 const dark = {
+    common: '#000000',
+    darkCommon: '#0f0f0f',
     themeColor: '#282828',
     lightThemeColor:   '#363636',
     darkThemeColor:   '#1c1c1c',

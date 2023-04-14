@@ -58,7 +58,7 @@ const CurrencySelector = ({route, navigation}) =>{
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: Colors[theme]?.themeColor,
+      backgroundColor: Colors[theme]?.common,
     },
     emptyListView: {
       marginVertical: 20,
@@ -146,9 +146,9 @@ const CurrencySelector = ({route, navigation}) =>{
       <View style={styles.container}>
       <FlatList
         data={currencies}
-        initialNumToRender={5}
+        initialNumToRender={8}
         updateCellsBatchingPeriod={1000}
-        maxToRenderPerBatch={3}
+        maxToRenderPerBatch={10}
         style={{ flexGrow: 1}}
         contentInsetAdjustmentBehavior="automatic"
         ListEmptyComponent = {EmptyList()}

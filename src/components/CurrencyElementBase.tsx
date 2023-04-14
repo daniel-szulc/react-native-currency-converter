@@ -72,21 +72,13 @@ state = {
       container: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: Colors[theme]?.lightThemeColor,
+        backgroundColor: Colors[theme]?.darkCommon,
         marginHorizontal: 10,
         marginTop: DisplaySize[this.props.displaySize].space,
         marginBottom: DisplaySize[this.props.displaySize].space,
         padding: 10,
         paddingVertical: DisplaySize[this.props.displaySize].padding,
         borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 1,
-          height: 1
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3
       },
       text:{
         fontSize: DisplaySize[this.props.displaySize].fontSize,
@@ -99,11 +91,10 @@ state = {
         fontWeight: "bold"
       },
       currencyNameView: {
-        flex: 1,
+        flex: 2,
         paddingHorizontal: 10,
         marginVertical: -1,
         textAlign: "left",
-
       },
       flag: {
         width: DisplaySize[this.props.displaySize].flagSize[this.props.currency.type].width,
@@ -144,7 +135,7 @@ state = {
      {
        this.state.imageExists ? (<Image source={this.state.imageSource} style={this.styles.flag} />) : (
          <View style={this.styles.flag}><Text
-           style={this.styles.flagText}>{this.props.currency.symbol === "" ? "?" : this.props.currency.symbol}</Text></View>)
+           style={this.styles.flagText}>{this.props.currency.symbol === "" ? this.props.currency.name : this.props.currency.symbol}</Text></View>)
      }
      <View style={this.styles.currencyNameView}>
        {this.props.currency.name ? <Text style={[this.styles.text, this.styles.currencyName]}>{this.props.currency.name}</Text> : null}
@@ -162,7 +153,7 @@ state = {
       flag = this.props.currency.imageUrl;
 
     return (
-      (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
+      (this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
         (<TouchableOpacity onPress={() => this.props.onPress(this.props.currency)} style={this.styles.container}>
           {this.baseCurrencyView()}
         </TouchableOpacity>) : null

@@ -85,7 +85,7 @@ const  Settings = ({route, navigation}) => {
   }, [navigation, theme]);
 
 
-
+/*
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -125,7 +125,7 @@ const  Settings = ({route, navigation}) => {
       justifyContent: 'space-evenly',
       width: 120,
     },
-  });
+  });*/
 
   return (
     <SettingsComponent

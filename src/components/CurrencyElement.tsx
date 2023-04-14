@@ -19,17 +19,31 @@ class CurrencyElement extends CurrencyElementBase {
 
   get styles() {
     const { theme } = this.context;
-
     return StyleSheet.create(
       Object.assign({},
         super.styles,
         {
           currencyValue: {
             color: Colors[this.context.theme]?.primaryText,
+            fontWeight: 'bold',
             fontSize: DisplaySize[this.props.displaySize].fontSizeValue,
           }
         }));
     }
+
+  getAmount(roundDecimalValue) {
+    const roundedValue = Math.round(this.props.currency.convertedResult * roundDecimalValue) / roundDecimalValue;
+    const [integerPart, decimalPart] = String(roundedValue).split('.');
+
+    return (
+      <Text style={this.styles.currencyValue}>
+
+        {this.props.currency.symbol + " " + integerPart}
+        <Text style={{color: Colors[this.context.theme].disabled, fontWeight: 'normal'}}>{decimalPart ? "."+decimalPart : null}</Text>
+      </Text>
+    );
+  }
+
 
   render() {
    super.render();
@@ -41,7 +55,9 @@ class CurrencyElement extends CurrencyElementBase {
       (this.props.currency.full_name !== "" && this.props.currency.name !== "" && this.props.currency.convertedResult !== undefined) ?
         (<TouchableOpacity onPress={() => this.props.onPress(this.props.currency)} onLongPress={() => this.props.onLongPress(this.props.currency)}  style={this.styles.container}>
           {this.baseCurrencyView()}
-            <Text style={this.styles.currencyValue}>{this.props.currency.symbol + Math.round(this.props.currency.convertedResult * roundDecimalValue) / roundDecimalValue}</Text>
+          <View style={{flex: 1.3, alignItems: "flex-end"}}>
+          {this.getAmount(roundDecimalValue)}
+          </View>
         </TouchableOpacity>) : null
 
     );

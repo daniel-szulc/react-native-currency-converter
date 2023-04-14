@@ -34,7 +34,7 @@ const SettingsComponent = ({
     <>
       {dialogType=="select" && <SettingsSelectDialog title={titleDialog} modalElements={dialogElements} selectedElement={selectedItem} onItemSelected={handleItemSelected} modalVisible={dialogVisible} setModalVisible={setDialogVisible}  />}
       {dialogType=="info" &&  <InfoDialog title={titleDialog} information={infoDialog} modalVisible={dialogVisible} setModalVisible={setDialogVisible} button={infoButton}/> }
-      <ScrollView style={{backgroundColor: Colors[theme].themeColor}}>
+      <ScrollView style={{backgroundColor: Colors[theme].darkCommon}}>
         {settingsOptions.map(({icon, title, subTitle, onPress, selectElements, selected, infoDialog, button}) => (
           <TouchableOpacity key={title} onPress={()=> {
 

@@ -65,15 +65,15 @@ class Home extends React.Component {
       headerRight: () => (
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <IconButton
+            onPress={() => navigation.navigate("Settings", {settings: this.state.data.settings})}
             icon={(props) => (
               <Ionicons
-                onPress={() => navigation.navigate("Settings", {settings: this.state.data.settings})}
+
                 name="settings-sharp"
                 size={24}
                 color={Colors[theme]?.white}
               />
             )}
-            color="primary"
           />
         </View>
       )
@@ -257,7 +257,7 @@ componentDidUpdate(prevProps, prevState) {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: Colors[theme]?.themeColor
+        backgroundColor: Colors[theme]?.common
       },
       titleStyle: {
         fontSize: 28,
@@ -312,7 +312,7 @@ componentDidUpdate(prevProps, prevState) {
         <View style={styles.container}>
           <ScrollView
                       refreshControl={
-                        <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+                        <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} colors={[Colors[theme].primary, Colors[theme].disabled]} progressBackgroundColor={Colors[theme].common} />}
           >
             <View style={{height: DisplaySize[this.state.data.settings.size].space}}/>
             {

@@ -5,6 +5,7 @@ import Home from "./Home";
 import Settings from "./Settings";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CurrencySelector from "./CurrencySelector";
+import { Colors } from "../theme";
 const Stack = createNativeStackNavigator();
 export default function Navigation() {
   const { theme } = useContext(ThemeContext);
@@ -15,7 +16,9 @@ export default function Navigation() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{ animation: 'slide_from_right' }}
+          options={{
+            animation: 'slide_from_right',
+        }}
         />
         <Stack.Screen
           name="Selector"

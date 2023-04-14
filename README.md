@@ -1,4 +1,4 @@
-<center>
+<div align="center">
 
 # 💱 React-Native Currency Converter
 
@@ -7,13 +7,13 @@
 ![React](https://img.shields.io/badge/18.2-61DAFB?logo=react&logoColor=white&label=React)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)
 ![Expo](https://img.shields.io/badge/Expo-1C1E24?logo=expo&logoColor=white)
-[![Android OS Version](https://img.shields.io/badge/Android-4.4+-white?color=green&amp;logo=android&amp;logoColor=green)](https://www.android.com/)
+[![Android OS Version](https://img.shields.io/badge/Android-5.0+-white?color=green&amp;logo=android&amp;logoColor=green)](https://www.android.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 <a href='https://play.google.com/store/apps/details?id=com.DanielSzulc.CurrencyConverter'><img alt='Get it on Google Play' height=100px src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-</center>
+</div>
 
 ## About 📱
 

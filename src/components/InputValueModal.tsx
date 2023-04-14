@@ -17,7 +17,6 @@ interface Props {
     const [value, setValue] = useState<string>('1');
 
     const handleInputChange = (text: string) => {
-      // Wartość inputa zostanie przefiltrowana tak, aby zawierała tylko cyfry
       const filteredText = text.replace(/[^0-9.,]/g, '');
 
 
@@ -33,8 +32,9 @@ interface Props {
 
     };
 
-    const handleButtonPress = () => {
-      convertValue(parseFloat(value.replace(',', '.')));
+    const handleButtonPress =  () => {
+
+      convertValue(value.length===0 ? 0 : parseFloat(value.replace(',', '.')));
       setModalVisible(false)
     };
 
@@ -50,25 +50,16 @@ interface Props {
         margin: 20,
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: Colors[theme]?.themeColor,
+        backgroundColor: Colors[theme]?.darkCommon,
         borderRadius: 20,
         padding: 35,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
       },
       button: {
         marginTop: 15,
         width: "100%",
         borderRadius: 10,
         padding: 10,
-        elevation: 2,
         backgroundColor: Colors[theme]?.primary,
         minWidth: "60%",
       },
@@ -79,7 +70,7 @@ interface Props {
         padding: 10,
       },
       amounts:{
-        backgroundColor: Colors[theme]?.lightThemeColor,
+        backgroundColor: Colors[theme]?.common,
         width: undefined,
         padding: 0,
         minWidth: undefined,
@@ -95,7 +86,6 @@ interface Props {
         textAlign: 'center',
       },
       textInput:{
-
         padding: 10,
         alignSelf: "center",
         fontSize: 20,
@@ -106,17 +96,17 @@ interface Props {
       },
       textInputContainer: {
         backgroundColor: Colors[theme]?.darkThemeColor,
-       shadowColor: '#000',
+      /* shadowColor: '#000',
         shadowOffset: {
           width: 0,
           height: 2,
         },
-
+*/
         marginBottom: 15,
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
+/*        shadowOpacity: 0.25,
+        shadowRadius: 4,*/
         borderRadius: 10,
-        elevation: 5,
+       // elevation: 5,
         justifyContent: "space-between",
         flexDirection: 'row',
         alignItems: 'center',
@@ -169,6 +159,8 @@ interface Props {
               onChangeText={handleInputChange}
               style={styles.textInput}
               onSubmitEditing={handleButtonPress}
+              keyboardAppearance={"dark"}
+              autoFocus={true}
             />
             </View>
             <View style={styles.exampleAmounts}>

@@ -28,23 +28,22 @@ class CurrencyElementSelector extends CurrencyElementBase {
     this.setState({isSelected: this.props.stateSelection})
   }
 
-/*  componentDidUpdate(prevProps) {
-
-  }*/
   static context = ThemeContext;
 
-  styles = StyleSheet.create(
-    Object.assign({},
-      this.styles,
+  get styles() {
+    const { theme } = this.context;
+    return StyleSheet.create(
+      Object.assign({},
+        super.styles,
       {
         checkbox: {
           alignSelf: "center",
           marginVertical: 5,
           marginHorizontal: 10,
-
         }
-      })
-  );
+      }));
+  }
+
 
 
   render() {
