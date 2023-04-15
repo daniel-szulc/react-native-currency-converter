@@ -23,6 +23,7 @@ import DisplaySize from "../data/DisplaySize";
 import { options } from "axios";
 import i18next from "i18next";
 import InfoDialog from "../components/InfoDialog";
+import Calculator from "../components/Calculator";
 
 
 
@@ -43,9 +44,9 @@ class Home extends React.Component {
     this.state = {
       data: DefaultData,
       refreshing: false,
-      modalVisible: false,
+      calculatorVisible: true,
       isGoingBack: false,
-      tempSelected: undefined,
+   /*   tempSelected: undefined,*/
       dialogAsk: {
         isActive: false,
         title: "",
@@ -124,7 +125,7 @@ class Home extends React.Component {
 
 componentDidUpdate(prevProps, prevState) {
 
-  if (!this.state.modalVisible && (prevState.providedAmount !== this.state.providedAmount || prevState.data.selectedCurrency !== this.state.data.selectedCurrency)) {
+  if (prevState.providedAmount !== this.state.providedAmount || prevState.data.selectedCurrency !== this.state.data.selectedCurrency) {
 
     this.convertValue(this.state.data.providedAmount);
   }
@@ -153,9 +154,9 @@ componentDidUpdate(prevProps, prevState) {
 
 
 
-    setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
-  };
+/*/!*    setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });*!/
+  };*/
 
   removeCurrency = (selectedCurrency) => {
 
@@ -197,22 +198,60 @@ componentDidUpdate(prevProps, prevState) {
     )
   }
 
+  hideCalculator = () => {
+    this.setState({
+      calculatorVisible: false
+    })
+  }
 
+  handleCalculatorView = (value: string) => {
 
+    this.setState(prevState => ({
+      data: {
+        ...prevState.data,
 
-  selectTempCurrency = (selectedCurrency) => {
+        selectedCurrencies: prevState.data.selectedCurrencies.map(item => {
+          if (item.name ===  this.state.data.selectedCurrency.name){
+            return {
+              ...item,
+              convertedResult: value
+            };
+          }
+          return item;
+        })
+      }
+    }));
+  };
+
+  selectCurrency = (selectedCurrency) => {
+    if (!selectedCurrency) return;
+
+    this.setState(prevState => ({
+      calculatorVisible: true,
+      data: {
+        ...prevState.data,
+        selectedCurrency: selectedCurrency
+      }
+    }));
+
+  };
+
+/*  selectTempCurrency = (selectedCurrency) => {
     if (!selectedCurrency) return;
     this.setState({
       tempSelected: selectedCurrency
     });
     this.setModalVisible(true);
-  };
+  };*/
 
   convertValue = (value: number) => {
-
+    if(isNaN(value)) {
+      value = 0;
+    }
     const { selectedCurrencies } = this.state.data;
     let  currencyBase = this.state.data.selectedCurrency;
-    if(this.state.tempSelected) {
+
+/*    if(this.state.tempSelected) {
       currencyBase = this.state.tempSelected;
 
       this.setState(prevState => ({
@@ -220,12 +259,16 @@ componentDidUpdate(prevProps, prevState) {
           ...prevState.data,
           selectedCurrency: currencyBase}
       }));
-    };
+    };*/
+
 
     if (selectedCurrencies) {
       const updatedCurrencies = selectedCurrencies.map(currency => {
-        const rateBase = currency.rate / currencyBase.rate;
-        const result = value * rateBase;
+        let result = currency.convertedResult;
+        if(currency.name != this.state.data.selectedCurrency.name) {
+          const rateBase = currency.rate / currencyBase.rate;
+          result = value * rateBase;
+        }
         return {
           ...currency,
           convertedResult: result
@@ -250,7 +293,7 @@ componentDidUpdate(prevProps, prevState) {
   render() {
     const { theme } = this.context;
 
-    const { modalVisible } = this.state;
+ //   const { modalVisible } = this.state;
 
 
 
@@ -272,6 +315,7 @@ componentDidUpdate(prevProps, prevState) {
         textAlign: "center",
         padding: 10
       },
+
       touchableOpacityStyle: {
         position: "absolute",
         width: 60,
@@ -293,7 +337,26 @@ componentDidUpdate(prevProps, prevState) {
         flexDirection: "row",
         justifyContent: "space-evenly",
         width: 120
-      }
+      },
+      addButton:{
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "transparent",
+        borderWidth: 1,
+        borderColor: Colors[theme]?.darkThemeColor,
+        borderStyle: "dotted",
+        marginHorizontal: 10,
+        marginTop: DisplaySize[this.state.data.settings.size].space,
+        marginBottom: DisplaySize[this.state.data.settings.size].space,
+        padding: 10,
+        paddingVertical: DisplaySize[this.state.data.settings.size].padding,
+        borderRadius: 10,
+      },
+      addButtonText: {
+        color: Colors[theme]?.darkWhite,
+        padding: 5
+      },
 
 
     });
@@ -306,20 +369,28 @@ componentDidUpdate(prevProps, prevState) {
       <SafeAreaView style={styles.container}>
 
         <InfoDialog title={this.state.dialogAsk.title} information={this.state.dialogAsk.description} modalVisible={this.state.dialogAsk.isActive} button={{title: i18n.t("Remove"), onPress: this.state.dialogAsk.onAccept}} setModalVisible={this.cancelDialogAsk} />
-        <InputValueModal selectedCurrency={this.state.tempSelected ? this.state.tempSelected : this.state.data.selectedCurrency} modalVisible={modalVisible}
-                         setModalVisible={this.setModalVisible} convertValue={this.convertValue} />
+ {/*       <InputValueModal selectedCurrency={this.state.tempSelected ? this.state.tempSelected : this.state.data.selectedCurrency} modalVisible={modalVisible}
+                         setModalVisible={this.setModalVisible} convertValue={this.convertValue} />*/}
 
         <View style={styles.container}>
           <ScrollView
+            style={{flex: 1}}
                       refreshControl={
                         <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} colors={[Colors[theme].primary, Colors[theme].disabled]} progressBackgroundColor={Colors[theme].common} />}
           >
             <View style={{height: DisplaySize[this.state.data.settings.size].space}}/>
             {
               this.state.data?.selectedCurrencies.map((currency) =>
-                <CurrencyElement key={currency.name} onPress={this.selectTempCurrency} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size}/>
+                <CurrencyElement key={currency.name} onPress={this.selectCurrency} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size} selected={this.state.data.selectedCurrency.name === currency.name}/>
               )
             }
+
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Selector", {
+              data: this.state.data
+            })} style={[styles.addButton]}>
+              <Ionicons name="add-circle" size={24} color={Colors[theme].primary} />
+              <Text style={[styles.textStyle, styles.addButtonText]}>{i18n.t("Add new")}</Text>
+            </TouchableOpacity>
             <Text style={{
               alignSelf: "flex-end",
               margin: 5,
@@ -328,14 +399,18 @@ componentDidUpdate(prevProps, prevState) {
             }}>{formatLastUpdate(this.state.data?.lastUpdate)}</Text>
             <View style={{height: DisplaySize[this.state.data.settings.size].space}}/>
           </ScrollView>
-          <TouchableOpacity
+
+
+          {this.state.calculatorVisible && <Calculator handleCalculatorView={this.handleCalculatorView} convertValue={this.convertValue} hideCalculator={this.hideCalculator}/>}
+
+{/*          <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => this.props.navigation.navigate("Selector", {
               data: this.state.data
             })}
             style={styles.touchableOpacityStyle}>
             <MaterialCommunityIcons name="web-plus" size={30} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
         </View>
       </SafeAreaView>
     );

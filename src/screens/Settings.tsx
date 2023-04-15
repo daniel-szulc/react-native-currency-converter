@@ -1,6 +1,6 @@
-import { Linking, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Linking, SafeAreaView, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CurrencyElement from "../components/CurrencyElement";
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect } from "react";
 import { Colors } from "../theme";
 import { ThemeContext, ThemeType } from "../theme/ThemeContext";
@@ -17,11 +17,12 @@ import { setSettingsData } from "../data/SaveData";
 
 const  Settings = ({route, navigation}) => {
 
+
   const policyUrl = "https://daniel-szulc.github.io/CurrencyConverter/PrivacyPolicy";
   const rateUrl = "https://play.google.com/store/apps/details?id=com.DanielSzulc.CurrencyConverter";
   const mailUrl = 'mailto:dszulc.dev@gmail.com?subject=CurrencyConverter'
   const { settings } = route.params;
-
+  const shareMessage = i18n.t("ShareText") + " " + rateUrl;
   const [mySettings, setSettings] = React.useState(settings);
   const [email, setEmail] = React.useState(null);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -68,14 +69,18 @@ const  Settings = ({route, navigation}) => {
     )
   }
 
+
   const settingsOptions = [
     {icon: <MaterialCommunityIcons name="theme-light-dark" size={iconSize} color={getColor()}/>, title: i18n.t('Theme'), subTitle: i18n.t(theme), onPress: changeTheme},
     {icon: <Ionicons name="language" size={iconSize} color={getColor()} />, title: i18n.t('Language'), subTitle: i18n.t('lang'), onPress: changeLanguage, selectElements: languages, selected: i18n.language},
     {icon: <MaterialIcons name="table-rows" size={iconSize} color={getColor()} />, title: i18n.t('Display size'), subTitle: i18n.t(mySettings.size), onPress: changeDisplaySize, selectElements: displaySizes, selected: mySettings.size},
     {icon: <FontAwesome5 name="google-play"size={iconSize} color={getColor()} />, title: i18n.t('Rate in Google Play'), subTitle: null, onPress: () => {Linking.openURL(rateUrl).catch((err) => console.error('An error occurred', err));}},
+    {icon: <Entypo name="share" size={iconSize} color={getColor()} />, title: i18n.t('Share'), subTitle: null, onPress: () => { Share.share({message: shareMessage}).catch((err) => console.error('An error occurred', err));}},
     {icon: <MaterialIcons name="feedback" size={iconSize} color={getColor()}/>, title: i18n.t('Feedback'), subTitle: null, onPress: () =>  {}, infoDialog: "sendFeedbackEmail", button: {title: "email", onPress: () => {Linking.openURL(mailUrl).catch((err) => console.error('An error occurred', err));} }},
     {icon: <MaterialIcons name="policy" size={iconSize} color={getColor()}/>, title: i18n.t('Privacy Policy'), subTitle: null, onPress: () => {Linking.openURL(policyUrl).catch((err) => console.error('An error occurred', err));}},
     {icon: <FontAwesome5 name="database"  size={iconSize} color={getColor()}/>, title: i18n.t('Data source'), subTitle: null, onPress: () => {}, infoDialog: dataSourceInfo() },
+
+
   ];
 
   React.useEffect(() => {

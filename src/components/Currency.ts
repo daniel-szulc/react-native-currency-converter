@@ -10,7 +10,7 @@ export interface Currency {
   full_name: string;
   name: string;
   symbol: string;
-  convertedResult: number;
+  convertedResult: number | string;
   imageUrl: string;
   type: CurrencyType;
 }

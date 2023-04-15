@@ -213,6 +213,7 @@ const CurrencySelector = ({route, navigation}) =>{
         <Tab.Navigator
           screenOptions={({ route }) => ({
             headerShown: false,
+            tabBarStyle: {minHeight: 60, paddingBottom: 5, paddingTop: 5},
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 

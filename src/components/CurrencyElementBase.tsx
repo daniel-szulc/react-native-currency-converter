@@ -38,7 +38,7 @@ state = {
 
   componentDidUpdate(prevProps) {
 
-    if (prevProps.currency !== this.props.currency) {
+    if (prevProps.currency.name !== this.props.currency.name) {
 
       this.setState(
         {

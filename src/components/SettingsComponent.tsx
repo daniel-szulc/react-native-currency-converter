@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
-import { ScrollView, TouchableOpacity, View, Text, Modal } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../theme";
 import { ThemeContext } from "../theme/ThemeContext";
 import SettingsSelectDialog from "./SettingsSelectDialog";
 import InfoDialog from "./InfoDialog";
 import infoDialog from "./InfoDialog";
-import { use } from "i18next";
+import i18n, { use } from "i18next";
 import ContactDialog from "./ContactDialog";
-
+import Constants from "expo-constants"
 
 const SettingsComponent = ({
                              settingsOptions
@@ -23,12 +23,27 @@ const SettingsComponent = ({
   const [dialogVisible, setDialogVisible] = useState(false); // stan określający widoczność Modal
   const [selectionOnPress, setSelectionOnPress] = useState();
   const [infoButton, setInfoButton] = useState();
-
+  const version = Constants.manifest.version
   const handleItemSelected = (item: string) => {
 
     if(selectionOnPress)
       selectionOnPress(item);
   };
+
+  const styles = StyleSheet.create({
+    option: {
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+      paddingTop: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 20
+    },
+    title:{fontSize: 17, color: Colors[theme].white},
+    subtitle: {fontSize: 14, color: Colors[theme].darkWhite, opacity: 0.5, paddingTop: 5}
+
+  }
+  );
 
   return (
     <>
@@ -63,14 +78,7 @@ const SettingsComponent = ({
           }
           }>
             <View
-              style={{
-                paddingHorizontal: 20,
-                paddingBottom: 20,
-                paddingTop: 20,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 20
-              }}>
+              style={styles.option}>
 
               {icon}
 
@@ -78,9 +86,9 @@ const SettingsComponent = ({
               style={{
 
               }}>
-              <Text style={{fontSize: 17, color: Colors[theme].white}}>{title}</Text>
+              <Text style={styles.title}>{title}</Text>
               {subTitle && (
-                <Text style={{fontSize: 14, color: Colors[theme].darkWhite, opacity: 0.5, paddingTop: 5}}>
+                <Text style={styles.subtitle}>
                   {subTitle}
                 </Text>
               )}
@@ -89,7 +97,17 @@ const SettingsComponent = ({
             <View style={{height: 0.5, backgroundColor: Colors[theme].darkThemeColor}} />
           </TouchableOpacity>
         ))}
-        <Text style={{
+        <View   style={styles.option}>
+          <View>
+          <Text style={styles.title}>{i18n.t("Version")}</Text>
+          <Text style={styles.subtitle}>{version}</Text>
+          </View>
+        </View>
+        <View style={ {
+          height: 0.5,
+          backgroundColor: Colors[theme].darkThemeColor
+        }} />
+        <Text style={   {
           alignSelf: "flex-end",
           margin: 5,
           marginHorizontal: 10,

@@ -8,6 +8,7 @@ const commonColor = {
 const light = {
     common: '#ffffff',
     darkCommon: '#f5f5f5',
+    hardDarkCommon:  '#e1e1e1',
     themeColor: '#efefef',
     lightThemeColor:  '#ffffff',
     darkThemeColor:  '#d0d0d0',
@@ -17,12 +18,14 @@ const light = {
     sky: '#DE5E69',
     gray: 'gray',
     primaryText: '#1773af',
+    primarySoft: '#b7defa',
     ...commonColor,
 };
 
 const dark = {
     common: '#000000',
     darkCommon: '#0f0f0f',
+   hardDarkCommon: '#252525',
     themeColor: '#282828',
     lightThemeColor:   '#363636',
     darkThemeColor:   '#1c1c1c',
@@ -32,6 +35,7 @@ const dark = {
     sky: '#831a23',
     gray: 'white',
     primaryText: '#359ce1',
+    primarySoft:  '#05273b',
     ...commonColor,
 };
 
