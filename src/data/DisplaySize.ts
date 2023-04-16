@@ -16,7 +16,12 @@ export default {
     space: 2,
     padding: 4,
     fontSize: 10,
-    fontSizeValue: 12
+    fontSizeValue: 12,
+    settings: {
+      title: 14,
+      subTitle: 12,
+      space: 12
+    }
   },
   default:{
     flagSize: {
@@ -34,7 +39,12 @@ export default {
     space: 5,
     padding: 8,
     fontSize: 14,
-    fontSizeValue: 16
+    fontSizeValue: 16,
+    settings: {
+      title: 17,
+      subTitle: 14,
+      space: 18
+    }
   },
   large:{
     flagSize: {
@@ -52,7 +62,12 @@ export default {
     space: 8,
     padding: 15,
     fontSize: 16,
-    fontSizeValue: 20
+    fontSizeValue: 20,
+    settings: {
+      title: 20,
+      subTitle: 16,
+      space: 20
+    }
   }
 
 }

@@ -71,70 +71,49 @@ const  Settings = ({route, navigation}) => {
 
 
   const settingsOptions = [
-    {icon: <MaterialCommunityIcons name="theme-light-dark" size={iconSize} color={getColor()}/>, title: i18n.t('Theme'), subTitle: i18n.t(theme), onPress: changeTheme},
-    {icon: <Ionicons name="language" size={iconSize} color={getColor()} />, title: i18n.t('Language'), subTitle: i18n.t('lang'), onPress: changeLanguage, selectElements: languages, selected: i18n.language},
-    {icon: <MaterialIcons name="table-rows" size={iconSize} color={getColor()} />, title: i18n.t('Display size'), subTitle: i18n.t(mySettings.size), onPress: changeDisplaySize, selectElements: displaySizes, selected: mySettings.size},
-    {icon: <FontAwesome5 name="google-play"size={iconSize} color={getColor()} />, title: i18n.t('Rate in Google Play'), subTitle: null, onPress: () => {Linking.openURL(rateUrl).catch((err) => console.error('An error occurred', err));}},
-    {icon: <Entypo name="share" size={iconSize} color={getColor()} />, title: i18n.t('Share'), subTitle: null, onPress: () => { Share.share({message: shareMessage}).catch((err) => console.error('An error occurred', err));}},
-    {icon: <MaterialIcons name="feedback" size={iconSize} color={getColor()}/>, title: i18n.t('Feedback'), subTitle: null, onPress: () =>  {}, infoDialog: "sendFeedbackEmail", button: {title: "email", onPress: () => {Linking.openURL(mailUrl).catch((err) => console.error('An error occurred', err));} }},
-    {icon: <MaterialIcons name="policy" size={iconSize} color={getColor()}/>, title: i18n.t('Privacy Policy'), subTitle: null, onPress: () => {Linking.openURL(policyUrl).catch((err) => console.error('An error occurred', err));}},
-    {icon: <FontAwesome5 name="database"  size={iconSize} color={getColor()}/>, title: i18n.t('Data source'), subTitle: null, onPress: () => {}, infoDialog: dataSourceInfo() },
+    {icon: <MaterialCommunityIcons name="theme-light-dark" size={iconSize} color={getColor()}/>, title: 'Theme', subTitle: theme, onPress: changeTheme},
+    {icon: <Ionicons name="language" size={iconSize} color={getColor()} />, title: 'Language', subTitle: 'lang', onPress: changeLanguage, selectElements: languages, selected: i18n.language},
+    {icon: <MaterialIcons name="table-rows" size={iconSize} color={getColor()} />, title: 'Display size', subTitle: mySettings.size, onPress: changeDisplaySize, selectElements: displaySizes, selected: mySettings.size},
+    {icon: <FontAwesome5 name="google-play"size={iconSize} color={getColor()} />, title: 'Rate in Google Play', subTitle: null, onPress: () => {Linking.openURL(rateUrl).catch((err) => console.error('An error occurred', err));}},
+    {icon: <Entypo name="share" size={iconSize} color={getColor()} />, title: 'Share', subTitle: null, onPress: () => { Share.share({message: shareMessage}).catch((err) => console.error('An error occurred', err));}},
+    {icon: <MaterialIcons name="feedback" size={iconSize} color={getColor()}/>, title: 'Feedback', subTitle: null, onPress: () =>  {}, infoDialog: "sendFeedbackEmail", button: {title: "email", onPress: () => {Linking.openURL(mailUrl).catch((err) => console.error('An error occurred', err));} }},
+    {icon: <MaterialIcons name="policy" size={iconSize} color={getColor()}/>, title: 'Privacy Policy', subTitle: null, onPress: () => {Linking.openURL(policyUrl).catch((err) => console.error('An error occurred', err));}},
+    {icon: <FontAwesome5 name="database"  size={iconSize} color={getColor()}/>, title: 'Data source', subTitle: null, onPress: () => {}, infoDialog: dataSourceInfo() },
 
 
   ];
 
   React.useEffect(() => {
+
+
     navigation.setOptions(({
       headerTitle: i18n.t('Settings')
     }));
-  }, [navigation, theme]);
+  }, [navigation, mySettings.language]);
 
-
-/*
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: Colors[theme]?.themeColor,
-    },
-    titleStyle: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      color: Colors[theme]?.white,
-      padding: 10,
-    },
-    textStyle: {
-      fontSize: 16,
-      color: Colors[theme]?.white,
-      textAlign: 'center',
-      padding: 10,
-    },
-    touchableOpacityStyle: {
-      position: 'absolute',
-      width: 60,
-      height: 60,
-      alignItems: 'center',
-      justifyContent: 'center',
-      alignSelf: 'center',
-      bottom: 30,
-      backgroundColor: Colors[theme]?.primary,
-      borderRadius: 30,
-    },
-    floatingButtonStyle: {
-      resizeMode: 'contain',
-      width: 50,
-      height: 50,
-    },
-    iconContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      width: 120,
-    },
-  });*/
+      option: {
+        paddingHorizontal: 20,
+        paddingBottom: DisplaySize[mySettings.size].settings.space,
+        paddingTop: DisplaySize[mySettings.size].settings.space,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 20
+      },
+      title:{
+        fontSize: DisplaySize[mySettings.size].settings.title, color: Colors[theme].white
+      },
+      subtitle: {
+        fontSize: DisplaySize[mySettings.size].settings.subTitle, color: Colors[theme].darkWhite, opacity: 0.5, paddingTop: 5
+      }
+
+    }
+  );
 
   return (
     <SettingsComponent
       settingsOptions={settingsOptions}
+      styles={styles}
     />
 
   );

@@ -1,3 +1,14 @@
 export { default as en } from "./en.ts";
 export { default as pl } from "./pl.ts";
 export { default as de } from "./de.ts";
+export { default as fr } from "./fr.ts";
+export { default as pt } from "./pt.ts";
+export { default as es } from "./es.ts";
+export { default as it } from "./it.ts";
+export { default as zh } from "./zh.ts";
+export { default as hi } from "./hi.ts";
+export { default as uk } from "./uk.ts";
+export { default as th } from "./th.ts";
+export { default as ko } from "./ko.ts";
+export { default as ja } from "./ja.ts";
+export { default as ru } from "./ru.ts";

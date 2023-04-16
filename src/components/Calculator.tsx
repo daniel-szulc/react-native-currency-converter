@@ -2,16 +2,18 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import i18n from "i18next";
 import { Colors } from "../theme";
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 
 type CalculatorProps = {
   handleCalculatorView: (result: string) => void;
   convertValue: (value: number) => void;
   hideCalculator: () => void;
+  visible: boolean;
+  orientation: string;
 }
 
-const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertValue, hideCalculator }) => {
+const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertValue, hideCalculator, visible, orientation }) => {
   const [result, setResult] = useState<number>(0);
   const [input, setInput] = useState<string>('');
   const [ignoreCalc, setIgnoreCalc] = useState<boolean>(false);
@@ -21,16 +23,31 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
     setInput(result);
   };
 
-  const handleOperatorPress = (operator: string) => {
-    const result = input + ` ${operator} `
+  const handleOperatorPress = async (operator: string) => {
+
+    let _input = input;
+    if (input.slice(-1) === " ")
+      _input = input.slice(0, -3)
+
+    const result = _input + ` ${operator} `
       handleCalculatorView(result);
     setInput(result);
   };
 
-  const handleBackspacePress = () => {
-    const result = input.slice(0, -1)
-    setInput(result);
+  const handleBackspacePress = async () => {
+    let result = input
+    if (result.slice(-1) === " ") {
+      result = input.slice(0, -2);
+      if (result.slice(-1) === " ")
+        result = result.slice(0, -1)
+    }
+    else
+      result = input.slice(0, -1)
+
+
     handleCalculatorView(result);
+    await setInput(result);
+
 
   };
 
@@ -95,7 +112,8 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
         width: "100%",
 
         borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+        borderTopRightRadius: orientation === 'portrait' ? 20 : 0,
+        borderBottomLeftRadius: orientation === 'portrait' ? 0 : 20,
         padding: 10,
         backgroundColor: Colors[theme].common,
         shadowColor: "#000",
@@ -113,9 +131,11 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
         flexDirection: 'row',
         justifyContent: 'space-around',
         gap:4,
+
       },
       button: {
         flex: 1,
+
         backgroundColor: Colors[theme].common,
         borderWidth: 1,
         borderColor: Colors[theme]?.hardDarkCommon,
@@ -161,8 +181,10 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
 
 
 
+
+
   return (
-    <View style={styles.container}>
+    <View  style={[styles.container, !visible && { display: 'none' }]} >
       <View style={styles.row}>
         <TouchableOpacity style={[styles.button, styles.buttonWide, styles.clearButton]} onPress={() => handleClearPress()}>
           <Text style={[styles.buttonText, styles.clearButtonText]}>C</Text>
@@ -224,7 +246,8 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
             <Text style={styles.buttonText}>0</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => hideCalculator()}>
-            <MaterialIcons name="keyboard-hide" size={24} color={Colors[theme].disabled} />
+          {/*  <MaterialIcons name="keyboard-hide" size={24} color={Colors[theme].disabled} />*/}
+            <Entypo name={orientation==='portrait' ? "chevron-down" : "chevron-right"} size={26} color={Colors[theme].disabled} />
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.operatorButton]}  onPress={() => handleEqualPress()}>
             <Text  style={[styles.buttonText, styles.operatorButtonText]}>=</Text>

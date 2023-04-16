@@ -11,7 +11,8 @@ import ContactDialog from "./ContactDialog";
 import Constants from "expo-constants"
 
 const SettingsComponent = ({
-                             settingsOptions
+                             settingsOptions,
+                              styles
                            }) => {
 
   const { theme } = useContext(ThemeContext);
@@ -30,20 +31,7 @@ const SettingsComponent = ({
       selectionOnPress(item);
   };
 
-  const styles = StyleSheet.create({
-    option: {
-      paddingHorizontal: 20,
-      paddingBottom: 20,
-      paddingTop: 20,
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 20
-    },
-    title:{fontSize: 17, color: Colors[theme].white},
-    subtitle: {fontSize: 14, color: Colors[theme].darkWhite, opacity: 0.5, paddingTop: 5}
 
-  }
-  );
 
   return (
     <>
@@ -58,7 +46,7 @@ const SettingsComponent = ({
               setDialogType("select")
               setSelectionOnPress((item: string) => onPress);
               setDialogElements(selectElements);
-              setTitleDialog(title)
+              setTitleDialog(i18n.t(title))
               setDialogVisible(true);
               setSelectedItem(selected);
             }
@@ -86,10 +74,10 @@ const SettingsComponent = ({
               style={{
 
               }}>
-              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.title}>{i18n.t(title)}</Text>
               {subTitle && (
                 <Text style={styles.subtitle}>
-                  {subTitle}
+                  {i18n.t(subTitle)}
                 </Text>
               )}
             </View>

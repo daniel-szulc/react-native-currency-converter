@@ -20,24 +20,21 @@ function defaultSelectedCurrency(data: Data){
 
 }
 
-export async function updateData(currentData: Data | undefined): Promise<Data> {
+export async function updateData(currentData: Data | undefined): Promise<Data | null> {
 
   const data = currentData ? currentData : DefaultData;
   try {
     const currencyService = new CurrencyService();
-    try {
       const currencies = await currencyService.getCurrenciesPromise(data.lastUpdate);
       if(currencies) {
         data.currency = currencies.currencies;
         data.lastUpdate = currencies.lastUpdate;
         data.crypto = currencies.cryptoCurrencies;
       }
-    } catch (error) {
-      console.error(error);
-    }
 
   } catch (error) {
     console.error(error);
+    return null;
   }
 
   if(data.selectedCurrencies)
@@ -57,6 +54,8 @@ export async function updateData(currentData: Data | undefined): Promise<Data> {
 
   if(data.selectedCurrency == undefined)
     data.selectedCurrency =  data.selectedCurrencies[0];
+
+
 
   await setData(data);
 

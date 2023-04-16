@@ -13,10 +13,12 @@ export class CurrencyService {
 
   public async getCurrenciesPromise(lastUpdate?: string ): Promise<CurrencyServiceProps | undefined>  {
 
+    const allCurrencies: Currency[] = [];
+
       try {
         const response = await axios.get<any>( 'https://api.coinbase.com/v2/exchange-rates?currency=USD');
 
-        const allCurrencies: Currency[] = [];
+
 
         for (const [key, value] of Object.entries(response.data.data.rates)) {
           const currency: Currency = { rate: value, full_name: '', name: key, symbol: '', convertedResult: value, imageUrl: '', type: CurrencyType.Crypto };

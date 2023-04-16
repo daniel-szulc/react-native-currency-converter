@@ -1,15 +1,16 @@
 import {
-  Alert,
+  Dimensions,
   RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  ToastAndroid
 } from "react-native";
 import CurrencyElement from "../components/CurrencyElement";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Colors } from "../theme";
 import { ThemeContext, ThemeType } from "../theme/ThemeContext";
@@ -25,8 +26,6 @@ import i18next from "i18next";
 import InfoDialog from "../components/InfoDialog";
 import Calculator from "../components/Calculator";
 
-
-
 export function formatLastUpdate(lastUpdate: string | undefined): string {
   if(!lastUpdate)
     return "";
@@ -41,19 +40,34 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
 
+    const isPortrait = () => {
+      const dim = Dimensions.get('screen');
+      return dim.height >= dim.width;
+    };
+
     this.state = {
       data: DefaultData,
       refreshing: false,
       calculatorVisible: true,
       isGoingBack: false,
-   /*   tempSelected: undefined,*/
+      calculatorValue: '1',
       dialogAsk: {
         isActive: false,
         title: "",
         description: "",
-        onAccept: undefined
-      }
+        onAccept: undefined,
+      },
+      orientation: isPortrait() ? 'portrait' : 'landscape'
     };
+
+    Dimensions.addEventListener('change', () => {
+      this.setState({
+        orientation: isPortrait() ? 'portrait' : 'landscape'
+      } );
+
+
+
+    });
   }
 
 
@@ -63,6 +77,7 @@ class Home extends React.Component {
     const { theme } = this.context;
 
     navigation.setOptions({
+      headerTitle: i18n.t("currencyConverter"),
       headerRight: () => (
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <IconButton
@@ -98,16 +113,10 @@ class Home extends React.Component {
     const { theme } = this.context;
 
 
-
-    navigation.setOptions({
-      headerTitle: i18n.t("currencyConverter"),
-    });
-
-
-
     this.updateHeader();
 
     this.loadData();
+
 
     navigation.addListener('focus', async () => {
       const newData = await getLocalData();
@@ -135,11 +144,19 @@ componentDidUpdate(prevProps, prevState) {
 }
 
 
+
+
   fetchData = async () => {
 
     try {
 
       const newData = await updateData(this.state.data);
+
+      if(newData===null)
+      {
+        ToastAndroid.show(i18n.t("Error updating exchange rates"), ToastAndroid.SHORT);
+        return;
+      }
       this.setState({ data: newData, refreshing: false });
       this.convertValue(this.state.data.providedAmount);
     } catch (error) {
@@ -209,7 +226,7 @@ componentDidUpdate(prevProps, prevState) {
     this.setState(prevState => ({
       data: {
         ...prevState.data,
-
+        calcaulatorValue: value,
         selectedCurrencies: prevState.data.selectedCurrencies.map(item => {
           if (item.name ===  this.state.data.selectedCurrency.name){
             return {
@@ -225,6 +242,14 @@ componentDidUpdate(prevProps, prevState) {
 
   selectCurrency = (selectedCurrency) => {
     if (!selectedCurrency) return;
+
+    if(selectedCurrency.name === this.state.data.selectedCurrency.name)
+    {
+      this.setState({
+        calculatorVisible: true,
+      });
+      return;
+    }
 
     this.setState(prevState => ({
       calculatorVisible: true,
@@ -265,7 +290,14 @@ componentDidUpdate(prevProps, prevState) {
     if (selectedCurrencies) {
       const updatedCurrencies = selectedCurrencies.map(currency => {
         let result = currency.convertedResult;
-        if(currency.name != this.state.data.selectedCurrency.name) {
+        if(currency.name === this.state.data.selectedCurrency.name )
+        {
+          if(currency.rate == currency.convertedResult && currency.convertedResult != this.state.data.providedAmount)
+          {
+            result = this.state.data.calcaulatorValue
+          }
+        }
+          if(currency.name != this.state.data.selectedCurrency.name ) {
           const rateBase = currency.rate / currencyBase.rate;
           result = value * rateBase;
         }
@@ -300,8 +332,9 @@ componentDidUpdate(prevProps, prevState) {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: Colors[theme]?.common
-      },
+        backgroundColor: Colors[theme]?.common,
+        flexDirection: this.state.orientation === 'portrait' ? "column" : "row"
+  },
       titleStyle: {
         fontSize: 28,
         fontWeight: "bold",
@@ -357,12 +390,31 @@ componentDidUpdate(prevProps, prevState) {
         color: Colors[theme]?.darkWhite,
         padding: 5
       },
+      emptyListView: {
+        marginVertical: 20,
+        flexGrow: 1,
+        flexDirection: "column",
+        flex: 1,
+        alignItems:"center",
+        justifyContent: "center",
+        textAlign: "center"
+      },
+      emptyListText:{
+        marginTop: 10,
+        color: Colors[theme].darkWhite,
+        fontSize: 16,
+      }
+    })
 
 
-    });
-
-
-
+    const EmptyList = () => {
+      return(
+        <View style={styles.emptyListView}>
+          <MaterialIcons name="highlight-off" size={34} color={'grey'} />
+          <Text style={styles.emptyListText}>{i18n.t("No currencies found")}</Text>
+        </View>
+      )
+    }
 
 
     return (
@@ -380,9 +432,10 @@ componentDidUpdate(prevProps, prevState) {
           >
             <View style={{height: DisplaySize[this.state.data.settings.size].space}}/>
             {
+              this.state.data?.selectedCurrencies.length > 0 ?
               this.state.data?.selectedCurrencies.map((currency) =>
                 <CurrencyElement key={currency.name} onPress={this.selectCurrency} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size} selected={this.state.data.selectedCurrency.name === currency.name}/>
-              )
+              ) : <EmptyList/>
             }
 
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Selector", {
@@ -401,16 +454,8 @@ componentDidUpdate(prevProps, prevState) {
           </ScrollView>
 
 
-          {this.state.calculatorVisible && <Calculator handleCalculatorView={this.handleCalculatorView} convertValue={this.convertValue} hideCalculator={this.hideCalculator}/>}
+           <Calculator  handleCalculatorView={this.handleCalculatorView} convertValue={this.convertValue} hideCalculator={this.hideCalculator} visible={this.state.calculatorVisible} orientation={this.state.orientation}/>
 
-{/*          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => this.props.navigation.navigate("Selector", {
-              data: this.state.data
-            })}
-            style={styles.touchableOpacityStyle}>
-            <MaterialCommunityIcons name="web-plus" size={30} color="white" />
-          </TouchableOpacity>*/}
         </View>
       </SafeAreaView>
     );
