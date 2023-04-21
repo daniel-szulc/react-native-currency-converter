@@ -135,17 +135,22 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
       },
       button: {
         flex: 1,
-
         backgroundColor: Colors[theme].common,
         borderWidth: 1,
         borderColor: Colors[theme]?.hardDarkCommon,
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10,
+
       },
       buttonText: {
+
         fontSize: 30,
-        color: Colors[theme].white
+        lineHeight: 35,
+        color: Colors[theme].white,
+        verticalAlign: 'middle',
+        textAlign: 'center',
+        textAlignVertical: 'center',
       },
       buttonWide: {
         paddingHorizontal:3,

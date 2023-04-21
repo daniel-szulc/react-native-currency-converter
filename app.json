@@ -8,8 +8,13 @@
   },
   "expo": {
     "name": "Currency Converter",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon_round.png",
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#7db6f1"
+    },
     "version": "0.0.5",
     "slug": "reactcurrencyconverter",
     "plugins": [
@@ -22,7 +27,11 @@
     },
     "android": {
       "package": "com.DanielSzulc.CurrencyConverter",
-      "versionCode": 1
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon_adaptive.png",
+        "backgroundColor": "#7db6f1"
+      }
     }
   },
   "owner": "danio189"
