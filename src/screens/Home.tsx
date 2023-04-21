@@ -25,6 +25,7 @@ import { options } from "axios";
 import i18next from "i18next";
 import InfoDialog from "../components/InfoDialog";
 import Calculator from "../components/Calculator";
+import * as StoreReview from "expo-store-review";
 
 export function formatLastUpdate(lastUpdate: string | undefined): string {
   if(!lastUpdate)
@@ -130,6 +131,10 @@ class Home extends React.Component {
 
 
 
+
+
+
+
 }
 
 componentDidUpdate(prevProps, prevState) {
@@ -141,8 +146,20 @@ componentDidUpdate(prevProps, prevState) {
 
   this.updateHeader();
 
+  if(this.state.data)
+    if(this.state.data.selectedCurrencies.length != 7)
+    {
+      const randomBoolean = Math.random() < 0.5;
+      if (randomBoolean)
+        this.reviewApp();
+    }
 }
 
+  reviewApp = async() => {
+    if (await StoreReview.hasAction()) {
+      await StoreReview.requestReview()
+    }
+  }
 
 
 

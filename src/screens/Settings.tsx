@@ -10,7 +10,7 @@ import SettingsComponent from "../components/SettingsComponent";
 import { StackActions } from "@react-navigation/native";
 import DisplaySize from "../data/DisplaySize";
 import { setSettingsData } from "../data/SaveData";
-
+import * as StoreReview from 'expo-store-review';
 
 
 

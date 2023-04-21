@@ -2622,6 +2622,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qs@npm:^6.9.7":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+  languageName: node
+  linkType: hard
+
 "@types/react-native-vector-icons@npm:^6.4.10, @types/react-native-vector-icons@npm:^6.4.6":
   version: 6.4.13
   resolution: "@types/react-native-vector-icons@npm:6.4.13"
@@ -4697,6 +4704,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-linking@npm:~4.0.1":
+  version: 4.0.1
+  resolution: "expo-linking@npm:4.0.1"
+  dependencies:
+    "@types/qs": ^6.9.7
+    expo-constants: ~14.2.0
+    invariant: ^2.2.4
+    qs: ^6.11.0
+    url-parse: ^1.5.9
+  checksum: 631656c9cad78c345b35b7decd8c2bc22014b867321fcbb0c740b15001a492080ee3be26d27a89587eb2736223c82a39c600950930cf44b6dd95d37acb7e1527
+  languageName: node
+  linkType: hard
+
 "expo-localization@npm:~14.1.1":
   version: 14.1.1
   resolution: "expo-localization@npm:14.1.1"
@@ -4749,6 +4769,15 @@ __metadata:
   version: 1.4.4
   resolution: "expo-status-bar@npm:1.4.4"
   checksum: 8d36b821ff2804aed3158f339cc396f0525f365763913881b9b11e6e85e83f21ddbc3a2ede660ae8ce6d6df1a6cda825ad996c3c45f195cbc89091da7605f7e0
+  languageName: node
+  linkType: hard
+
+"expo-store-review@npm:~6.2.1":
+  version: 6.2.1
+  resolution: "expo-store-review@npm:6.2.1"
+  peerDependencies:
+    expo: "*"
+  checksum: 54d5b0115a241003dff6d419c1ed1e9d3d8230b8b23a3a80179715ce72044820fbecde2f45ace7a50d1719470b0753bdfba69653df926430bc0e9429c630db91
   languageName: node
   linkType: hard
 
@@ -8088,6 +8117,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qs@npm:^6.11.0":
+  version: 6.11.1
+  resolution: "qs@npm:6.11.1"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 82ee78ef12a16f3372fae5b64f76f8aedecb000feea882bbff1af146c147f6eb66b08f9c3f34d7e076f28563586956318b9b2ca41141846cdd6d5ad6f241d52f
+  languageName: node
+  linkType: hard
+
 "query-string@npm:^6.13.6":
   version: 6.14.1
   resolution: "query-string@npm:6.14.1"
@@ -8493,9 +8531,11 @@ __metadata:
     expo: ~48.0.11
     expo-checkbox: ^2.3.1
     expo-constants: ~14.2.1
+    expo-linking: ~4.0.1
     expo-localization: ~14.1.1
     expo-splash-screen: ~0.18.1
     expo-status-bar: ~1.4.4
+    expo-store-review: ~6.2.1
     file-saver: ^2.0.5
     i18n-generator: ^0.5.1
     i18next: ^22.4.14

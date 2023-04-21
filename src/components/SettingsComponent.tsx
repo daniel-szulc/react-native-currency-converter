@@ -10,6 +10,7 @@ import i18n, { use } from "i18next";
 import ContactDialog from "./ContactDialog";
 import Constants from "expo-constants"
 
+
 const SettingsComponent = ({
                              settingsOptions,
                               styles
