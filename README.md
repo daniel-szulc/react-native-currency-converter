@@ -1,5 +1,8 @@
 <div align="center">
 
+<img src="/currencyConverter.png" alt="Currency Converter"/>
+
+
 # 💱 React-Native Currency Converter
 
 
