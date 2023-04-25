@@ -50,6 +50,13 @@ You can download React-Native Currency Converter from the [Google Play Store](ht
 
 React-Native Currency Converter is easy to use. Simply select the currencies or cryptocurrencies you wish to convert from and to. Then, enter the amount, and the app will calculate the converted amounts for you.
 
+## Resources
+
+- [Coinbase](https://docs.cloud.coinbase.com/). Currency & cryptocurrency rate source. [`api.coinbase.com/v2/exchange-rates`](https://api.coinbase.com/v2/exchange-rates)
+- [exchangerate.host](https://exchangerate.host/#/#docs). Source of information about currencies (full name, symbol). [`api.exchangerate.host/symbols`](https://api.exchangerate.host/symbols)
+- [CryptoCompare](cryptocompare.com). Source of information about cryptocurrencies (full name, symbol, image). [`cryptocompare.com/api/data/coinlist`](https://www.cryptocompare.com/api/data/coinlist/)
+- [Wise](https://wise.com/). Flag image source.
+
 ## Contributing 🤝
 
 Contributions are welcome! If you find a bug or have a feature suggestion, please open an issue or submit a pull request.
