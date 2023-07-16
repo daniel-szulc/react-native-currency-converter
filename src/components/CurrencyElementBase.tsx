@@ -2,13 +2,9 @@ import React from "react";
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Colors } from "../theme";
-import { CurrencyType } from "./Currency";
+
 import DisplaySize from "../data/DisplaySize";
 
-/*interface Props {
-  currency: Currency;
-  onPress: (param: Currency) => void;
-}*/
 
 class CurrencyElementBase extends React.PureComponent {
 

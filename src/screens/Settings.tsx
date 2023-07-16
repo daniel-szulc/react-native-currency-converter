@@ -5,12 +5,12 @@ import React, { useContext, useEffect } from "react";
 import { Colors } from "../theme";
 import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import i18n from "i18next";
-import { IconButton } from "@react-native-material/core";
+
 import SettingsComponent from "../components/SettingsComponent";
-import { StackActions } from "@react-navigation/native";
+
 import DisplaySize from "../data/DisplaySize";
 import { setSettingsData } from "../data/SaveData";
-import * as StoreReview from 'expo-store-review';
+
 
 
 
@@ -24,9 +24,6 @@ const  Settings = ({route, navigation}) => {
   const { settings } = route.params;
   const shareMessage = i18n.t("ShareText") + " " + rateUrl;
   const [mySettings, setSettings] = React.useState(settings);
-  const [email, setEmail] = React.useState(null);
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [sortBy, setSortBy] = React.useState(null);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const iconSize = 24;
   const getColor = () => {return Colors[theme]?.white}
@@ -39,6 +36,21 @@ const  Settings = ({route, navigation}) => {
   for (const key in DisplaySize) {
     displaySizes[key] = i18n.t(key)
   }
+
+  const precisions: Record<number, string> = {
+     10: '0.1',
+     100: '0.01',
+     1000: '0.001',
+    10000: '0.0001',
+    100000: '0.00001',
+    1000000: '0.000001',
+    10000000: '0.0000001',
+  };
+
+  const cryptoPrecisions: Record<number, string> = {
+    0: i18n.t('same as traditional currencies'),
+    ...precisions
+  };
 
   const changeLanguage = async (lang:string) => {
     if(i18n.language===lang)
@@ -54,6 +66,24 @@ const  Settings = ({route, navigation}) => {
 
   const changeDisplaySize = async (size:string) => {
     setSettings({...mySettings, size: size})
+  }
+
+  const changeDecimalPrecision = async (precision: number) => {
+    setSettings(
+      {
+        ...mySettings,
+        precision :  precision
+      }
+    )
+  }
+  const changeDecimalPrecisionCrypto = async (precision: number) => {
+
+    setSettings(
+      {
+        ...mySettings,
+        cryptoPrecision :  precision===0 ? mySettings.precision : precision
+      }
+    )
   }
 
   useEffect(() => {
@@ -74,6 +104,8 @@ const  Settings = ({route, navigation}) => {
     {icon: <MaterialCommunityIcons name="theme-light-dark" size={iconSize} color={getColor()}/>, title: 'Theme', subTitle: theme, onPress: changeTheme},
     {icon: <Ionicons name="language" size={iconSize} color={getColor()} />, title: 'Language', subTitle: 'lang', onPress: changeLanguage, selectElements: languages, selected: i18n.language},
     {icon: <MaterialIcons name="table-rows" size={iconSize} color={getColor()} />, title: 'Display size', subTitle: mySettings.size, onPress: changeDisplaySize, selectElements: displaySizes, selected: mySettings.size},
+    {icon: <FontAwesome5 name="coins" size={iconSize} color={getColor()} />, title: 'Decimal precision', subTitle: precisions[mySettings.precision], onPress: changeDecimalPrecision, selectElements: precisions, selected: mySettings.precision},
+    {icon: <FontAwesome5 name="bitcoin" size={iconSize} color={getColor()} />, title: 'Decimal precision - crypto', subTitle: cryptoPrecisions[mySettings.cryptoPrecision], onPress: changeDecimalPrecisionCrypto, selectElements: cryptoPrecisions, selected: mySettings.cryptoPrecision},
     {icon: <FontAwesome5 name="google-play"size={iconSize} color={getColor()} />, title: 'Rate in Google Play', subTitle: null, onPress: () => {Linking.openURL(rateUrl).catch((err) => console.error('An error occurred', err));}},
     {icon: <Entypo name="share" size={iconSize} color={getColor()} />, title: 'Share', subTitle: null, onPress: () => { Share.share({message: shareMessage}).catch((err) => console.error('An error occurred', err));}},
     {icon: <MaterialIcons name="feedback" size={iconSize} color={getColor()}/>, title: 'Feedback', subTitle: null, onPress: () =>  {}, infoDialog: "sendFeedbackEmail", button: {title: "email", onPress: () => {Linking.openURL(mailUrl).catch((err) => console.error('An error occurred', err));} }},

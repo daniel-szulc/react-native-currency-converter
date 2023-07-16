@@ -4,6 +4,8 @@ interface Settings {
   theme: string;
   language: string;
   size: string;
+  precision: number,
+  cryptoPrecision: number
 
 }
 

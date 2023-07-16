@@ -102,7 +102,7 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
 
     setResult(currentNumber);
     convertValue(currentNumber);
-   // setInputValue(currentNumber);
+
   }
 
   const { theme } = useContext<ThemeType>(ThemeContext);

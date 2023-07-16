@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ToastAndroid
+  ToastAndroid, BackHandler
 } from "react-native";
 import CurrencyElement from "../components/CurrencyElement";
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -18,11 +18,10 @@ import i18n from "i18next";
 import { IconButton } from "@react-native-material/core";
 import { Currency } from "../components/Currency";
 import { getLocalData, setData, updateData } from "../data/SaveData";
-import InputValueModal from "../components/InputValueModal";
+
 import DefaultData from "../data/DefaultData";
 import DisplaySize from "../data/DisplaySize";
-import { options } from "axios";
-import i18next from "i18next";
+
 import InfoDialog from "../components/InfoDialog";
 import Calculator from "../components/Calculator";
 import * as StoreReview from "expo-store-review";
@@ -70,6 +69,8 @@ class Home extends React.Component {
 
 
     });
+
+    this.handleBackButton = this.handleBackButton.bind(this);
   }
 
 
@@ -137,6 +138,7 @@ class Home extends React.Component {
       }
     });
 
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
 
 
 
@@ -184,6 +186,7 @@ componentDidUpdate(prevProps, prevState) {
       }
       this.setState({ data: newData, refreshing: false });
       this.convertValue(this.state.data.providedAmount);
+      this.setCurrentValue(this.state.data.providedAmount)
     } catch (error) {
       console.error(error);
     }
@@ -193,12 +196,6 @@ componentDidUpdate(prevProps, prevState) {
     setData(this.state.data);
   }
 
-
-
-
-/*/!*    setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });*!/
-  };*/
 
   removeCurrency = (selectedCurrency) => {
 
@@ -335,10 +332,23 @@ componentDidUpdate(prevProps, prevState) {
     });
   };
 
+
+
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton() {
+    if (this.state.calculatorVisible) {
+      this.hideCalculator();
+      return true;
+    }
+    return false;
+  }
+
   render() {
     const { theme } = this.context;
-
- //   const { modalVisible } = this.state;
 
 
 
@@ -377,7 +387,6 @@ componentDidUpdate(prevProps, prevState) {
         resizeMode: "contain",
         width: 50,
         height: 50
-        //backgroundColor:'black'
       },
       iconContainer: {
         flexDirection: "row",
@@ -434,8 +443,7 @@ componentDidUpdate(prevProps, prevState) {
       <SafeAreaView style={styles.container}>
 
         <InfoDialog title={this.state.dialogAsk.title} information={this.state.dialogAsk.description} modalVisible={this.state.dialogAsk.isActive} button={{title: i18n.t("Remove"), onPress: this.state.dialogAsk.onAccept}} setModalVisible={this.cancelDialogAsk} />
- {/*       <InputValueModal selectedCurrency={this.state.tempSelected ? this.state.tempSelected : this.state.data.selectedCurrency} modalVisible={modalVisible}
-                         setModalVisible={this.setModalVisible} convertValue={this.convertValue} />*/}
+
 
         <View style={styles.container}>
           <ScrollView
@@ -447,7 +455,7 @@ componentDidUpdate(prevProps, prevState) {
             {
               this.state.data?.selectedCurrencies.length > 0 ?
               this.state.data?.selectedCurrencies.map((currency) =>
-                <CurrencyElement key={currency.name} onPress={this.selectCurrency} providedAmount={this.state.currentViewValue} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size} selected={this.state.data.selectedCurrency.name === currency.name}/>
+                <CurrencyElement key={currency.name} onPress={this.selectCurrency} providedAmount={this.state.currentViewValue} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size} settings={this.state.data.settings} selected={this.state.data.selectedCurrency.name === currency.name}/>
               ) : <EmptyList/>
             }
 

@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 import { Colors } from "../theme";
-import { useTheme } from "@react-navigation/native";
-import { Currency, CurrencyType } from "./Currency";
+
+import { CurrencyType } from "./Currency";
 import CurrencyElementBase from "./CurrencyElementBase";
 import DisplaySize from "../data/DisplaySize";
 
@@ -38,6 +38,11 @@ class CurrencyElement extends CurrencyElementBase {
 
   getAmount(roundDecimalValue) {
 
+    if(roundDecimalValue==0)
+      roundDecimalValue = this.props.settings.precision
+    if(roundDecimalValue==0)
+      roundDecimalValue = 100
+
     let amount = this.props.currency.convertedResult
 
     if(this.props.selected)
@@ -69,7 +74,7 @@ class CurrencyElement extends CurrencyElementBase {
   render() {
    super.render();
 
-    const roundDecimalValue = this.props.currency.type === CurrencyType.Crypto ? 10000 : 100;
+    const roundDecimalValue = this.props.currency.type === CurrencyType.Crypto ? this.props.settings.cryptoPrecision : this.props.settings.precision;
 
 
     return (

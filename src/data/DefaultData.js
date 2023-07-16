@@ -8,6 +8,8 @@ export default  {
   settings: {
     theme: 'light',
     size: 'default',
-    language: 'en'
+    language: 'en',
+    precision: 100,
+    cryptoPrecision: 1000,
   }
 };

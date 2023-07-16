@@ -15,7 +15,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#7db6f1"
     },
-    "version": "1.0.1",
+    "version": "1.1.0",
     "slug": "reactcurrencyconverter",
     "plugins": [
       "expo-localization"
@@ -27,7 +27,7 @@
     },
     "android": {
       "package": "com.DanielSzulc.CurrencyConverter",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adaptive.png",
         "backgroundColor": "#7db6f1"
