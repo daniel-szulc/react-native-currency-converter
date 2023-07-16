@@ -8,19 +8,26 @@ import { ThemeContext, ThemeType } from "../theme/ThemeContext";
 type CalculatorProps = {
   handleCalculatorView: (result: string) => void;
   convertValue: (value: number) => void;
+  setCurrentValue: (value: string) => void;
   hideCalculator: () => void;
   visible: boolean;
   orientation: string;
 }
 
-const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertValue, hideCalculator, visible, orientation }) => {
+const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertValue, setCurrentValue, hideCalculator, visible, orientation }) => {
   const [result, setResult] = useState<number>(0);
   const [input, setInput] = useState<string>('');
   const [ignoreCalc, setIgnoreCalc] = useState<boolean>(false);
   const handleNumberPress = (number: string) => {
     const result = input + number;
     handleCalculatorView(result);
-    setInput(result);
+    setInputValue(result);
+  };
+
+  const setInputValue= async (value: string)=>
+  {
+    await setInput(value);
+    setCurrentValue(value);
   };
 
   const handleOperatorPress = async (operator: string) => {
@@ -31,7 +38,7 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
 
     const result = _input + ` ${operator} `
       handleCalculatorView(result);
-    setInput(result);
+    setInputValue(result);
   };
 
   const handleBackspacePress = async () => {
@@ -46,18 +53,14 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
 
 
     handleCalculatorView(result);
-    await setInput(result);
-
+  setInputValue(result)
 
   };
 
   const handleClearPress = () => {
- //   setIgnoreCalc(true);
- //   setResult(0);
     handleCalculatorView('0');
     setInput('');
-
-//    convertValue(0);
+    setCurrentValue('0');
   };
 
   React.useEffect(() => {
@@ -99,6 +102,7 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
 
     setResult(currentNumber);
     convertValue(currentNumber);
+   // setInputValue(currentNumber);
   }
 
   const { theme } = useContext<ThemeType>(ThemeContext);
@@ -179,7 +183,7 @@ const Calculator: React.FC<CalculatorProps> = ({ handleCalculatorView, convertVa
     calculate().then(() => {
         setIgnoreCalc(true);
         handleCalculatorView(result.toString());
-        setInput(result.toString())
+      setInputValue(result.toString());
       }
     );
   };

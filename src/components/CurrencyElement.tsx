@@ -38,11 +38,21 @@ class CurrencyElement extends CurrencyElementBase {
 
   getAmount(roundDecimalValue) {
 
-       let [integerPart, decimalPart] = [this.props.currency.convertedResult, null]
+    let amount = this.props.currency.convertedResult
 
-    if(typeof this.props.currency.convertedResult === 'number') {
+    if(this.props.selected)
+    {
+      if(this.props.providedAmount != this.props.currency.convertedResult)
+        amount = this.props.providedAmount;
+    }
 
-      const roundedValue = Math.round(this.props.currency.convertedResult * roundDecimalValue) / roundDecimalValue;
+
+
+       let [integerPart, decimalPart] = [amount, null]
+
+    if(typeof amount === 'number') {
+
+      const roundedValue = Math.round(amount * roundDecimalValue) / roundDecimalValue;
       [integerPart, decimalPart] = String(roundedValue).split(".");
     }
 

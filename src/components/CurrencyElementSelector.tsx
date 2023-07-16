@@ -14,6 +14,7 @@ class CurrencyElementSelector extends CurrencyElementBase {
   }
 
   selectCurrency() {
+
     const selection = !this.state.isSelected;
 
     this.setState({

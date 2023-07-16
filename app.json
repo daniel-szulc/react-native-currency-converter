@@ -15,7 +15,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#7db6f1"
     },
-    "version": "1.0.0",
+    "version": "1.0.1",
     "slug": "reactcurrencyconverter",
     "plugins": [
       "expo-localization"

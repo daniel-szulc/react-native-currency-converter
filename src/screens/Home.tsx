@@ -52,6 +52,7 @@ class Home extends React.Component {
       calculatorVisible: true,
       isGoingBack: false,
       calculatorValue: '1',
+      currentViewValue: '0',
       dialogAsk: {
         isActive: false,
         title: "",
@@ -69,6 +70,13 @@ class Home extends React.Component {
 
 
     });
+  }
+
+
+  setCurrentValue = (value: string) =>{
+    this.setState({
+      currentViewValue: value
+    })
   }
 
 
@@ -258,6 +266,7 @@ componentDidUpdate(prevProps, prevState) {
   };
 
   selectCurrency = (selectedCurrency) => {
+
     if (!selectedCurrency) return;
 
     if(selectedCurrency.name === this.state.data.selectedCurrency.name)
@@ -272,37 +281,24 @@ componentDidUpdate(prevProps, prevState) {
       calculatorVisible: true,
       data: {
         ...prevState.data,
-        selectedCurrency: selectedCurrency
+        selectedCurrency: {
+          ...selectedCurrency,
+          convertedResult: this.state.data.providedAmount
+        }
       }
-    }));
+    }), ()=> {this.convertValue(this.state.data.providedAmount)});
+
+
 
   };
 
-/*  selectTempCurrency = (selectedCurrency) => {
-    if (!selectedCurrency) return;
-    this.setState({
-      tempSelected: selectedCurrency
-    });
-    this.setModalVisible(true);
-  };*/
-
   convertValue = (value: number) => {
+
     if(isNaN(value)) {
       value = 0;
     }
     const { selectedCurrencies } = this.state.data;
     let  currencyBase = this.state.data.selectedCurrency;
-
-/*    if(this.state.tempSelected) {
-      currencyBase = this.state.tempSelected;
-
-      this.setState(prevState => ({
-        data: {
-          ...prevState.data,
-          selectedCurrency: currencyBase}
-      }));
-    };*/
-
 
     if (selectedCurrencies) {
       const updatedCurrencies = selectedCurrencies.map(currency => {
@@ -327,7 +323,7 @@ componentDidUpdate(prevProps, prevState) {
         data: {
           ...prevState.data,
           selectedCurrencies: updatedCurrencies,
-          providedAmount: value
+          providedAmount: value,
         }
       }), () => this.saveData());
     }
@@ -451,7 +447,7 @@ componentDidUpdate(prevProps, prevState) {
             {
               this.state.data?.selectedCurrencies.length > 0 ?
               this.state.data?.selectedCurrencies.map((currency) =>
-                <CurrencyElement key={currency.name} onPress={this.selectCurrency} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size} selected={this.state.data.selectedCurrency.name === currency.name}/>
+                <CurrencyElement key={currency.name} onPress={this.selectCurrency} providedAmount={this.state.currentViewValue} onLongPress={this.removeCurrencyAsk} currency={currency} displaySize={this.state.data.settings.size} selected={this.state.data.selectedCurrency.name === currency.name}/>
               ) : <EmptyList/>
             }
 
@@ -471,7 +467,7 @@ componentDidUpdate(prevProps, prevState) {
           </ScrollView>
 
 
-           <Calculator  handleCalculatorView={this.handleCalculatorView} convertValue={this.convertValue} hideCalculator={this.hideCalculator} visible={this.state.calculatorVisible} orientation={this.state.orientation}/>
+           <Calculator  handleCalculatorView={this.handleCalculatorView} convertValue={this.convertValue} setCurrentValue={this.setCurrentValue} hideCalculator={this.hideCalculator} visible={this.state.calculatorVisible} orientation={this.state.orientation}/>
 
         </View>
       </SafeAreaView>
